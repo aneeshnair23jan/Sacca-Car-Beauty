@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+frontend/dist/
+frontend/build/
+
+# Database & uploads (keep uploads folder but not contents)
+backend/sacca.db
+backend/sacca.db-shm
+backend/sacca.db-wal
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Vite cache
+frontend/.vite/
