@@ -1,0 +1,123 @@
+export const defaultCmsContent = {
+  global: {
+    announcement: 'Premium automotive accessories. WhatsApp ordering. Expert fitment guidance.',
+    footerTitle: 'Premium upgrades for cars that deserve attention.',
+    footerDescription: 'Luxury automotive accessories, detailing essentials, and fitment-led recommendations delivered through a fast WhatsApp buying flow.',
+    email: 'sales@saccacarbeauty.com',
+    delivery: 'India-wide delivery',
+    support: 'Fitment support on request',
+  },
+  homepage: {
+    hero: {
+      label: 'Premium Car Accessories',
+      title: 'Sacca Car Beauty',
+      description: 'A cinematic automotive lifestyle store for exterior upgrades, interiors, detailing, electronics, and expert WhatsApp-assisted checkout.',
+      primaryCta: 'Shop Collection',
+      secondaryCta: 'WhatsApp Expert',
+      badge: 'Luxury Fitment',
+      noteTitle: 'WhatsApp-first checkout',
+      noteText: 'Cart, vehicle details, address, and order total packed into one ready-to-send message.',
+    },
+    metrics: [
+      { value: '90+', label: 'Performance goal' },
+      { value: 'SSR', label: 'SEO-first pages' },
+      { value: 'GA4', label: 'Ready tracking' },
+    ],
+    features: [
+      { title: 'Curated Quality', text: 'Premium parts, tested for fit and finish.' },
+      { title: 'Fast Inquiry', text: 'Quote and order through WhatsApp.' },
+      { title: 'Fitment Help', text: 'Vehicle-led product guidance.' },
+      { title: 'SEO Ready', text: 'SSR pages and structured data.' },
+    ],
+    story: {
+      label: 'Brand Story',
+      title: 'Built for owners who see the car as a signature.',
+      description: 'From protection kits and interior refinements to lighting, electronics, and detailing systems, every collection is designed to feel cinematic, practical, and confidence-building.',
+      cards: [
+        { title: 'Detailing Studio', text: 'Surface care, gloss, ceramic prep, and finish protection.' },
+        { title: 'Performance Feel', text: 'Accessories that sharpen the daily driving experience.' },
+        { title: 'Install Showcase', text: 'Before-after content, reels, and customer vehicle stories.' },
+        { title: 'Human Checkout', text: 'Questions stay personal through WhatsApp support.' },
+      ],
+    },
+    finder: {
+      label: 'Vehicle Compatibility',
+      title: 'Find products for your car',
+      brands: [
+        { name: 'BMW', models: ['3 Series', '5 Series', 'X5'] },
+        { name: 'Mercedes', models: ['C-Class', 'E-Class', 'GLE'] },
+        { name: 'Audi', models: ['A4', 'Q5', 'Q7'] },
+      ],
+      years: ['2026', '2025', '2024', '2023', '2022', '2021'],
+    },
+    categorySection: {
+      label: 'Categories',
+      title: 'Curated collections',
+    },
+    productSections: {
+      bestSellersLabel: 'Top Picks',
+      bestSellersTitle: 'Best Sellers',
+      newLaunchesLabel: 'Just In',
+      newLaunchesTitle: 'New Launches',
+      featuredLabel: 'Handpicked',
+      featuredTitle: 'Featured Products',
+    },
+    installLabel: 'Installation Showcase',
+    installShowcase: [
+      { title: 'Before', text: 'Factory cabin lighting with ordinary trim.' },
+      { title: 'After', text: 'Ambient lighting, premium mats, clean console protection.' },
+      { title: 'Reels', text: 'Install reels and customer car visuals ready for social content.' },
+    ],
+    testimonials: [
+      { quote: 'The WhatsApp checkout made choosing mats and ambient lighting simple.', name: 'Verified customer 1' },
+      { quote: 'Premium feel from product card to delivery conversation.', name: 'Verified customer 2' },
+      { quote: 'Fitment help saved me from ordering the wrong trim kit.', name: 'Verified customer 3' },
+    ],
+    testimonialsSection: {
+      label: 'Customers',
+      title: 'Garage stories',
+    },
+    cta: {
+      eyebrow: 'Order via WhatsApp',
+      title: 'Ready to upgrade your drive?',
+      description: 'Send us your vehicle details and cart. We will confirm compatibility, availability, and delivery.',
+      button: 'Start WhatsApp Order',
+    },
+  },
+  about: {
+    label: 'About Us',
+    title: 'Automotive retail with a studio-level finish.',
+    description: 'Sacca Car Beauty brings together product curation, fitment confidence, premium storytelling, and WhatsApp ordering for car owners who care about every detail.',
+    cards: [
+      { title: 'Curated Products', text: 'Accessories are selected for quality, finish, utility, and vehicle relevance.' },
+      { title: 'Fitment Guidance', text: 'Customers can share vehicle details before purchase for better recommendations.' },
+      { title: 'WhatsApp Commerce', text: 'Checkout stays quick, personal, and easy to confirm.' },
+    ],
+    operatingTitle: 'Built for content, conversion, and control.',
+    operatingItems: [
+      'Dynamic homepage sections and campaigns.',
+      'Installation reels and customer car showcases.',
+      'SEO-ready pages and structured content.',
+      'WhatsApp leads and conversion tracking readiness.',
+    ],
+  },
+  blog: {
+    label: 'Blog',
+    title: 'Guides for sharper automotive decisions.',
+    description: 'SEO-ready editorial space for product education, install stories, fitment guides, and premium car care content.',
+    posts: [
+      { title: 'How to choose premium car mats that actually fit', category: 'Interior', excerpt: 'A fitment-first guide to materials, edge finishing, locking systems, and maintenance.' },
+      { title: 'Paint protection basics for daily-driven cars', category: 'Detailing', excerpt: 'Understand ceramic prep, wash routines, and when exterior protection accessories matter.' },
+      { title: 'Small upgrades that make a cabin feel expensive', category: 'Lifestyle', excerpt: 'Lighting, organizers, trims, and electronics that add polish without visual clutter.' },
+    ],
+  },
+  contact: {
+    label: 'Contact',
+    title: 'Tell us your vehicle. We will guide the upgrade.',
+    description: 'Share your car model, year, and the look or function you want. The fastest path is WhatsApp.',
+    email: 'sales@saccacarbeauty.com',
+    support: 'Fitment guidance',
+    delivery: 'India-wide',
+    whatsappMessage: 'Hi, I need help choosing premium car accessories.',
+  },
+};

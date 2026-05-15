@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sacca-car-beauty.com/sitemap.xml

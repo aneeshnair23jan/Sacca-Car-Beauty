@@ -1,40 +1,30 @@
 # Dependencies
 node_modules/
-.pnp
-.pnp.js
 
-# Build output
-frontend/dist/
-frontend/build/
+# Editor settings
+.vscode/
 
-# Database & uploads (keep uploads folder but not contents)
-backend/sacca.db
-backend/sacca.db-shm
-backend/sacca.db-wal
-backend/uploads/*
-!backend/uploads/.gitkeep
+# Next.js build output
+.next/
+out/
 
 # Environment variables
-.env
 .env.local
 .env.*.local
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-*.log
+# Database
+sacca.db
+sacca.db-shm
+sacca.db-wal
 
-# OS files
+# Uploaded product images (keep the folder, ignore contents)
+public/uploads/*
+!public/uploads/.gitkeep
+
+# OS
 .DS_Store
 Thumbs.db
-desktop.ini
 
-# Editor
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Vite cache
-frontend/.vite/
+# Logs
+*.log
+npm-debug.log*
