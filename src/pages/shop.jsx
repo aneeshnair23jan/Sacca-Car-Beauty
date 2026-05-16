@@ -56,17 +56,17 @@ export default function ShopPage() {
   const hasFilters = qCategory || qSearch;
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-[#F5F7F8]">
       <Navbar />
 
       {/* Page header */}
-      <div className="bg-navy-900 py-10 px-4">
+      <div className="bg-white border-b border-[#E5E7EB] py-10 px-4">
         <div className="max-w-7xl mx-auto">
-          <p className="section-label text-gold-400 mb-1">Our Collection</p>
-          <h1 className="font-display text-3xl font-bold text-white">
+          <p className="section-label mb-1">Our Collection</p>
+          <h1 className="text-3xl font-extrabold text-[#111111]">
             {qSearch ? `Results for "${qSearch}"` : qCategory ? (categories.find((c) => c.id == qCategory)?.name || 'Products') : 'All Products'}
           </h1>
-          <p className="text-gray-400 text-sm mt-2">{total} product{total !== 1 ? 's' : ''} found</p>
+          <p className="text-zinc-500 text-sm mt-2">{total} product{total !== 1 ? 's' : ''} found</p>
         </div>
       </div>
 
@@ -75,11 +75,11 @@ export default function ShopPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
             {hasFilters && (
-              <button onClick={clearFilters} className="flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:text-red-700 uppercase tracking-wide border border-red-200 px-3 py-1.5">
+              <button onClick={clearFilters} className="flex items-center gap-1.5 text-xs font-semibold text-[#111111] hover:border-[#8DFF2F] uppercase tracking-wide border border-[#E5E7EB] rounded-md px-3 py-1.5">
                 <X className="w-3 h-3" /> Clear Filters
               </button>
             )}
-            <button onClick={() => setFiltersOpen(!filtersOpen)} className="sm:hidden flex items-center gap-2 text-sm font-medium text-gray-700 border border-gray-200 px-3 py-1.5">
+            <button onClick={() => setFiltersOpen(!filtersOpen)} className="sm:hidden flex items-center gap-2 text-sm font-medium text-gray-700 border border-[#E5E7EB] rounded-md px-3 py-1.5">
               <SlidersHorizontal className="w-4 h-4" /> Filters
             </button>
           </div>
@@ -92,7 +92,7 @@ export default function ShopPage() {
               <option value="newest">Newest First</option>
               <option value="price_asc">Price: Low to High</option>
               <option value="price_desc">Price: High to Low</option>
-              <option value="name">Name A–Z</option>
+              <option value="name">Name A-Z</option>
             </select>
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
           </div>
@@ -101,13 +101,13 @@ export default function ShopPage() {
         <div className="flex gap-8">
           {/* Sidebar */}
           <aside className={`${filtersOpen ? 'block' : 'hidden'} sm:block w-56 flex-shrink-0`}>
-            <div className="sticky top-24">
+            <div className="sticky top-24 glass p-4">
               <h3 className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">Categories</h3>
               <ul className="space-y-0.5">
                 <li>
                   <button
                     onClick={() => updateFilter('category', '')}
-                    className={`w-full text-left px-3 py-2.5 text-sm transition-colors border-l-2 ${!qCategory ? 'border-gold-600 text-gold-700 bg-gold-50 font-semibold' : 'border-transparent text-gray-600 hover:text-gold-600 hover:bg-gray-50'}`}
+                    className={`w-full text-left px-3 py-2.5 text-sm transition-colors border-l-2 ${!qCategory ? 'border-[#8DFF2F] text-[#111111] bg-[#8DFF2F]/15 font-semibold' : 'border-transparent text-gray-600 hover:text-[#111111] hover:bg-white'}`}
                   >
                     All Products
                   </button>
@@ -116,7 +116,7 @@ export default function ShopPage() {
                   <li key={cat.id}>
                     <button
                       onClick={() => updateFilter('category', cat.id)}
-                      className={`w-full text-left px-3 py-2.5 text-sm transition-colors border-l-2 flex items-center justify-between ${qCategory == cat.id ? 'border-gold-600 text-gold-700 bg-gold-50 font-semibold' : 'border-transparent text-gray-600 hover:text-gold-600 hover:bg-gray-50'}`}
+                      className={`w-full text-left px-3 py-2.5 text-sm transition-colors border-l-2 flex items-center justify-between ${qCategory == cat.id ? 'border-[#8DFF2F] text-[#111111] bg-[#8DFF2F]/15 font-semibold' : 'border-transparent text-gray-600 hover:text-[#111111] hover:bg-white'}`}
                     >
                       <span>{cat.name}</span>
                       <span className="text-xs text-gray-400">{cat.product_count}</span>
@@ -132,7 +132,7 @@ export default function ShopPage() {
             {loading ? (
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-white border border-gray-100">
+                  <div key={i} className="card overflow-hidden">
                     <div className="aspect-square skeleton" />
                     <div className="p-4 space-y-2">
                       <div className="h-3 skeleton rounded w-1/3" />
@@ -153,7 +153,7 @@ export default function ShopPage() {
                       <button
                         key={i}
                         onClick={() => updateFilter('page', i + 1)}
-                        className={`w-9 h-9 text-sm font-medium transition-colors ${currentPage === i + 1 ? 'bg-navy-900 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:border-gold-400 hover:text-gold-600'}`}
+                        className={`w-9 h-9 rounded-md text-sm font-medium transition-colors ${currentPage === i + 1 ? 'bg-[#111111] text-white' : 'bg-white text-gray-600 border border-[#E5E7EB] hover:border-[#8DFF2F] hover:text-[#111111]'}`}
                       >
                         {i + 1}
                       </button>

@@ -4,6 +4,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { SettingsProvider } from '@/context/SettingsContext';
 import { WishlistProvider } from '@/context/WishlistContext';
+import MobileBottomBar from '@/components/MobileBottomBar';
 import '@/styles/globals.css';
 
 export default function App({ Component, pageProps }) {
@@ -19,6 +20,7 @@ export default function App({ Component, pageProps }) {
         <CartProvider>
           <WishlistProvider>
             <Component {...restPageProps} />
+            <MobileBottomBar />
             <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
           </WishlistProvider>
         </CartProvider>

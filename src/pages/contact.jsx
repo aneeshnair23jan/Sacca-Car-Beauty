@@ -12,17 +12,17 @@ export default function ContactPage({ cmsContent }) {
   const whatsappHref = `https://wa.me/${settings.whatsapp_number?.replace(/\D/g, '') || ''}?text=${encodeURIComponent(cms.whatsappMessage)}`;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#070707]">
+    <div className="min-h-screen flex flex-col bg-[#F5F7F8]">
       <SEO title="Contact" description={cms.description} />
       <Navbar />
       <main className="flex-1">
         <section className="relative overflow-hidden surface-grid">
-          <div className="absolute inset-0 bg-gradient-to-b from-red-950/20 to-[#070707]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/80 to-[#F5F7F8]" />
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 grid lg:grid-cols-[0.9fr_1.1fr] gap-10">
             <div>
               <p className="section-label">{cms.label}</p>
-              <h1 className="font-display text-5xl md:text-6xl font-bold text-white leading-tight">{cms.title}</h1>
-              <p className="text-zinc-400 leading-8 mt-6">{cms.description}</p>
+              <h1 className="text-5xl md:text-6xl font-extrabold text-[#111111] leading-tight">{cms.title}</h1>
+              <p className="text-zinc-600 leading-8 mt-6">{cms.description}</p>
               <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn-primary mt-8 px-8 py-4">
                 <MessageCircle className="w-4 h-4" /> Start WhatsApp Chat
               </a>
@@ -56,10 +56,10 @@ export default function ContactPage({ cmsContent }) {
 
 function Info({ icon: Icon, label, value }) {
   return (
-    <div className="bg-black/40 rounded border border-white/10 p-4">
-      <Icon className="w-5 h-5 text-red-500 mb-3" />
+    <div className="bg-[#F5F7F8] rounded-xl border border-[#E5E7EB] p-4">
+      <Icon className="w-5 h-5 text-[#00A83D] mb-3" />
       <p className="text-xs text-zinc-500 uppercase font-bold">{label}</p>
-      <p className="text-sm text-white mt-1">{value}</p>
+      <p className="text-sm text-[#111111] mt-1">{value}</p>
     </div>
   );
 }

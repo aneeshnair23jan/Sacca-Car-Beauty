@@ -49,12 +49,12 @@ export default function CheckoutPage() {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#070707]">
+      <div className="min-h-screen flex flex-col bg-[#F5F7F8]">
         <SEO title="WhatsApp Checkout" description="Send your premium car accessories order through WhatsApp." />
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center text-center px-4 py-20">
-          <ShoppingBag className="w-16 h-16 text-zinc-700 mb-6" />
-          <h2 className="font-display text-2xl font-bold text-white mb-2">Your cart is empty</h2>
+          <ShoppingBag className="w-16 h-16 text-zinc-300 mb-6" />
+          <h2 className="text-2xl font-extrabold text-[#111111] mb-2">Your cart is empty</h2>
           <p className="text-zinc-500 max-w-sm">Add products first and we will prepare a clean WhatsApp order message.</p>
           <Link href="/shop" className="btn-primary py-3 px-8 mt-6">Browse Products</Link>
         </div>
@@ -64,14 +64,14 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#070707]">
+    <div className="min-h-screen flex flex-col bg-[#F5F7F8]">
       <SEO title="WhatsApp Checkout" description="Complete your order with WhatsApp checkout, vehicle details, delivery address, and cart total." />
       <Navbar />
 
-      <div className="bg-black border-b border-white/10 py-10 px-4">
+      <div className="bg-white border-b border-[#E5E7EB] py-10 px-4">
         <div className="max-w-5xl mx-auto">
           <p className="section-label mb-1">Almost There</p>
-          <h1 className="font-display text-3xl font-bold text-white">WhatsApp Checkout</h1>
+          <h1 className="text-3xl font-extrabold text-[#111111]">WhatsApp Checkout</h1>
         </div>
       </div>
 
@@ -79,8 +79,8 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="space-y-6">
             <div className="card p-6">
-              <h2 className="font-semibold text-white text-base mb-5 flex items-center gap-2">
-                <User className="w-4 h-4 text-red-500" /> Your Details
+              <h2 className="font-semibold text-[#111111] text-base mb-5 flex items-center gap-2">
+                <User className="w-4 h-4 text-[#00A83D]" /> Your Details
               </h2>
               <p className="text-xs text-zinc-500 mb-5">These details are packed into your pre-filled WhatsApp order message.</p>
 
@@ -89,7 +89,7 @@ export default function CheckoutPage() {
                 <Input icon={Phone} label="Phone Number" value={form.phone} placeholder="Your phone number" onChange={(phone) => setForm((f) => ({ ...f, phone }))} />
 
                 <label>
-                  <span className="block text-xs font-semibold text-zinc-400 uppercase mb-1.5">Delivery Address</span>
+      <span className="block text-xs font-semibold text-zinc-500 uppercase mb-1.5">Delivery Address</span>
                   <div className="relative">
                     <MapPin className="absolute left-3 top-3 w-4 h-4 text-zinc-500" />
                     <textarea
@@ -108,7 +108,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <label>
-                  <span className="block text-xs font-semibold text-zinc-400 uppercase mb-1.5">Notes (optional)</span>
+                  <span className="block text-xs font-semibold text-zinc-500 uppercase mb-1.5">Notes (optional)</span>
                   <div className="relative">
                     <FileText className="absolute left-3 top-3 w-4 h-4 text-zinc-500" />
                     <textarea
@@ -123,8 +123,8 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            <div className="bg-green-950/25 border border-green-500/20 rounded-lg p-5">
-              <h3 className="font-semibold text-green-300 text-sm mb-3 flex items-center gap-2">
+            <div className="bg-[#8DFF2F]/15 border border-[#8DFF2F]/35 rounded-2xl p-5">
+              <h3 className="font-semibold text-[#111111] text-sm mb-3 flex items-center gap-2">
                 <MessageCircle className="w-4 h-4" /> How WhatsApp Ordering Works
               </h3>
               <ol className="space-y-2">
@@ -134,8 +134,8 @@ export default function CheckoutPage() {
                   'WhatsApp opens with the complete order message.',
                   'We confirm fitment, stock, and delivery details.',
                 ].map((step, index) => (
-                  <li key={step} className="flex items-start gap-2 text-xs text-green-200/80">
-                    <span className="w-5 h-5 bg-green-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5 text-xs">{index + 1}</span>
+                  <li key={step} className="flex items-start gap-2 text-xs text-zinc-700">
+                    <span className="w-5 h-5 bg-[#8DFF2F] text-[#111111] rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5 text-xs">{index + 1}</span>
                     {step}
                   </li>
                 ))}
@@ -145,7 +145,7 @@ export default function CheckoutPage() {
 
           <div>
             <div className="card p-6 sticky top-24">
-              <h2 className="font-semibold text-white text-base mb-5 pb-4 border-b border-white/10">Order Summary</h2>
+              <h2 className="font-semibold text-[#111111] text-base mb-5 pb-4 border-b border-[#E5E7EB]">Order Summary</h2>
               <div className="space-y-3 mb-5 max-h-64 overflow-y-auto">
                 {cart.map((item) => {
                   const price = item.discount_percent > 0
@@ -153,7 +153,7 @@ export default function CheckoutPage() {
                     : item.price;
                   return (
                     <div key={item.id} className="flex gap-3">
-                      <div className="w-12 h-12 flex-shrink-0 bg-zinc-900 border border-white/10 rounded overflow-hidden">
+                      <div className="w-12 h-12 flex-shrink-0 bg-[#F5F7F8] border border-[#E5E7EB] rounded overflow-hidden">
                         {item.primary_image_url ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img src={item.primary_image_url} alt={item.name} className="w-full h-full object-cover" />
@@ -164,16 +164,16 @@ export default function CheckoutPage() {
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white truncate">{item.name}</p>
+                        <p className="text-sm font-medium text-[#111111] truncate">{item.name}</p>
                         <p className="text-xs text-zinc-500">Qty: {item.quantity}</p>
                       </div>
-                      <span className="text-sm font-semibold text-white flex-shrink-0">{formatPrice(price * item.quantity)}</span>
+                      <span className="text-sm font-semibold text-[#111111] flex-shrink-0">{formatPrice(price * item.quantity)}</span>
                     </div>
                   );
                 })}
               </div>
-              <div className="border-t border-white/10 pt-4 mb-6">
-                <div className="flex justify-between font-bold text-white text-lg">
+              <div className="border-t border-[#E5E7EB] pt-4 mb-6">
+                <div className="flex justify-between font-bold text-[#111111] text-lg">
                   <span>Total</span>
                   <span>{formatPrice(cartTotal)}</span>
                 </div>
@@ -182,7 +182,7 @@ export default function CheckoutPage() {
                 href={buildWhatsAppMessage()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded text-sm uppercase transition-colors"
+                className="w-full btn-primary py-4"
               >
                 <MessageCircle className="w-5 h-5" /> Send Order via WhatsApp
               </a>
@@ -200,7 +200,7 @@ export default function CheckoutPage() {
 function Input({ icon: Icon, label, value, placeholder, onChange }) {
   return (
     <label>
-      <span className="block text-xs font-semibold text-zinc-400 uppercase mb-1.5">{label}</span>
+      <span className="block text-xs font-semibold text-zinc-500 uppercase mb-1.5">{label}</span>
       <div className="relative">
         <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
         <input

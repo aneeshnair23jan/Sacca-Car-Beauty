@@ -36,7 +36,7 @@ export default function SEO({
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={pageTitle} />
       <meta name="twitter:description" content={pageDescription} />
-      <meta name="theme-color" content="#070707" />
+      <meta name="theme-color" content="#F5F7F8" />
       {jsonLd && (
         <script
           type="application/ld+json"

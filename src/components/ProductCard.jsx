@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Heart, MessageCircle, ShoppingCart } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useSettings } from '@/context/SettingsContext';
@@ -31,92 +32,95 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <Link href={`/product/${product.id}`} className="group card-dark overflow-hidden flex flex-col hover:border-red-600/70 transition-all duration-300">
-      <div className="relative aspect-square bg-zinc-900 overflow-hidden">
-        {product.primary_image_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={product.primary_image_url}
-            alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full hero-visual flex items-center justify-center p-6">
-            <div className="car-silhouette scale-75 w-full">
-              <span className="wheel wheel-left" />
-              <span className="wheel wheel-right" />
+    <motion.div whileHover={{ y: -6 }} transition={{ type: 'spring', stiffness: 260, damping: 22 }}>
+      <Link href={`/product/${product.id}`} className="group card overflow-hidden flex flex-col hover:border-[#8DFF2F] transition-all duration-300">
+        <div className="relative aspect-square bg-[#F5F7F8] overflow-hidden">
+          {product.primary_image_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={product.primary_image_url}
+              alt={product.name}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          ) : (
+            <div className="w-full h-full hero-visual flex items-center justify-center p-6">
+              <div className="car-silhouette scale-75 w-full">
+                <span className="wheel wheel-left" />
+                <span className="wheel wheel-right" />
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <div className="absolute inset-x-0 top-0 p-3 flex items-start justify-between gap-2">
-          <div className="flex flex-col gap-1">
-            {product.discount_percent > 0 && <Badge>-{product.discount_percent}%</Badge>}
-            {Boolean(product.new_launch) && <Badge>New</Badge>}
-            {Boolean(product.best_seller) && <Badge>Best Seller</Badge>}
-            {product.stock === 0 && <Badge tone="dark">Sold Out</Badge>}
+          <div className="absolute inset-x-0 top-0 p-3 flex items-start justify-between gap-2">
+            <div className="flex flex-col gap-1">
+              {product.discount_percent > 0 && <Badge>-{product.discount_percent}%</Badge>}
+              {Boolean(product.new_launch) && <Badge>New</Badge>}
+              {Boolean(product.best_seller) && <Badge>Best Seller</Badge>}
+              {product.stock === 0 && <Badge tone="dark">Sold Out</Badge>}
+            </div>
+            <button
+              onClick={handleWishlist}
+              className={`w-9 h-9 rounded-md flex items-center justify-center backdrop-blur transition-colors ${
+                wishlisted ? 'bg-[#111111] text-white' : 'bg-white/85 text-zinc-600 hover:text-[#111111]'
+              }`}
+              aria-label="Toggle wishlist"
+            >
+              <Heart className={`w-4 h-4 ${wishlisted ? 'fill-white' : ''}`} />
+            </button>
           </div>
-          <button
-            onClick={handleWishlist}
-            className={`w-9 h-9 rounded flex items-center justify-center backdrop-blur transition-colors ${
-              wishlisted ? 'bg-red-600 text-white' : 'bg-black/55 text-zinc-300 hover:text-white'
-            }`}
-            aria-label="Toggle wishlist"
-          >
-            <Heart className={`w-4 h-4 ${wishlisted ? 'fill-white' : ''}`} />
-          </button>
+
+          <div className="absolute inset-x-3 bottom-3 translate-y-16 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 grid grid-cols-[1fr_auto] gap-2">
+            <button
+              onClick={handleAddToCart}
+              disabled={product.stock === 0}
+              className="bg-[#111111] disabled:bg-zinc-400 text-white text-xs font-bold py-3 rounded-md flex items-center justify-center gap-2"
+            >
+              <ShoppingCart className="w-3.5 h-3.5" /> Add to Cart
+            </button>
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="w-11 bg-[#8DFF2F] text-[#111111] rounded-md flex items-center justify-center"
+              aria-label="Ask on WhatsApp"
+            >
+              <MessageCircle className="w-4 h-4" />
+            </a>
+          </div>
         </div>
 
-        <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 grid grid-cols-2">
-          <button
-            onClick={handleAddToCart}
-            disabled={product.stock === 0}
-            className="bg-red-600 disabled:bg-zinc-800 text-white text-xs font-bold py-3 uppercase flex items-center justify-center gap-2"
-          >
-            <ShoppingCart className="w-3.5 h-3.5" /> Add
-          </button>
-          <a
-            href={whatsappHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="bg-black/90 text-white text-xs font-bold py-3 uppercase flex items-center justify-center gap-2"
-          >
-            <MessageCircle className="w-3.5 h-3.5" /> Ask
-          </a>
-        </div>
-      </div>
+        <div className="p-4 flex flex-col flex-1">
+          {product.category_name && (
+            <span className="text-[11px] text-[#00A83D] font-bold uppercase tracking-[0.14em] mb-2">
+              {product.category_name}
+            </span>
+          )}
+          <h3 className="text-sm font-semibold text-[#111111] line-clamp-2 mb-3 flex-1 leading-snug">
+            {product.name}
+          </h3>
 
-      <div className="p-4 flex flex-col flex-1">
-        {product.category_name && (
-          <span className="text-[11px] text-red-500 font-bold uppercase mb-2">
-            {product.category_name}
-          </span>
-        )}
-        <h3 className="text-sm font-semibold text-white line-clamp-2 mb-3 flex-1 leading-snug">
-          {product.name}
-        </h3>
-
-        <div className="flex items-end justify-between gap-3">
-          <div className="flex flex-wrap items-baseline gap-2">
-            <span className="text-lg font-bold text-white">{formatPrice(discountedPrice)}</span>
-            {product.discount_percent > 0 && (
-              <span className="text-xs text-zinc-500 line-through">{formatPrice(product.price)}</span>
+          <div className="flex items-end justify-between gap-3">
+            <div className="flex flex-wrap items-baseline gap-2">
+              <span className="text-lg font-extrabold text-[#111111]">{formatPrice(discountedPrice)}</span>
+              {product.discount_percent > 0 && (
+                <span className="text-xs text-zinc-400 line-through">{formatPrice(product.price)}</span>
+              )}
+            </div>
+            {product.stock > 0 && product.stock <= 5 && (
+              <span className="text-[11px] text-amber-600 font-semibold">Only {product.stock} left</span>
             )}
           </div>
-          {product.stock > 0 && product.stock <= 5 && (
-            <span className="text-[11px] text-red-400 font-semibold">Only {product.stock} left</span>
-          )}
         </div>
-      </div>
-    </Link>
+      </Link>
+    </motion.div>
   );
 }
 
-function Badge({ children, tone = 'red' }) {
+function Badge({ children, tone = 'green' }) {
   return (
-    <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase ${
-      tone === 'red' ? 'bg-red-600 text-white' : 'bg-zinc-950 text-white'
+    <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase ${
+      tone === 'green' ? 'bg-[#8DFF2F] text-[#111111]' : 'bg-[#111111] text-white'
     }`}>
       {children}
     </span>

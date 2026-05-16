@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShoppingCart } from 'lucide-react';
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShoppingCart, MessageCircle } from 'lucide-react';
 import { getSettingsFromDb } from '@/lib/getSettings';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -16,7 +16,7 @@ export default function CartPage() {
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center text-center px-4 py-20">
           <ShoppingCart className="w-16 h-16 text-gray-200 mb-6" />
-          <h2 className="font-display text-2xl font-bold text-navy-900 mb-2">Your cart is empty</h2>
+          <h2 className="text-2xl font-extrabold text-[#111111] mb-2">Your cart is empty</h2>
           <p className="text-gray-500 text-sm mb-8">Add some products to get started</p>
           <Link href="/shop" className="btn-primary py-3 px-8">Browse Products</Link>
         </div>
@@ -30,11 +30,11 @@ export default function CartPage() {
       <Navbar />
 
       {/* Header */}
-      <div className="bg-navy-900 py-8 px-4">
+      <div className="bg-white border-b border-[#E5E7EB] py-8 px-4">
         <div className="max-w-5xl mx-auto">
-          <p className="section-label text-gold-400 mb-1">Review</p>
-          <h1 className="font-display text-3xl font-bold text-white">Shopping Cart</h1>
-          <p className="text-gray-400 text-sm mt-1">{cart.length} item{cart.length !== 1 ? 's' : ''}</p>
+          <p className="section-label mb-1">Review</p>
+          <h1 className="text-3xl font-extrabold text-[#111111]">Shopping Cart</h1>
+          <p className="text-zinc-500 text-sm mt-1">{cart.length} item{cart.length !== 1 ? 's' : ''}</p>
         </div>
       </div>
 
@@ -48,7 +48,7 @@ export default function CartPage() {
                 ? item.price * (1 - item.discount_percent / 100)
                 : item.price;
               return (
-                <div key={item.id} className="flex gap-4 border border-gray-100 p-4 hover:border-gold-200 transition-colors">
+                <div key={item.id} className="flex gap-4 border border-[#E5E7EB] bg-white rounded-2xl p-4 hover:border-[#8DFF2F] transition-colors">
                   <div className="w-20 h-20 flex-shrink-0 bg-gray-50 overflow-hidden">
                     {item.primary_image_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -60,12 +60,12 @@ export default function CartPage() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <Link href={`/product/${item.id}`} className="font-semibold text-navy-900 hover:text-gold-600 text-sm line-clamp-2 transition-colors">
+                    <Link href={`/product/${item.id}`} className="font-semibold text-[#111111] hover:text-[#00A83D] text-sm line-clamp-2 transition-colors">
                       {item.name}
                     </Link>
                     {item.category_name && <p className="text-xs text-gray-400 mt-0.5">{item.category_name}</p>}
                     <div className="flex items-center gap-2 mt-1.5">
-                      <span className="font-bold text-navy-900 text-sm">{formatPrice(itemPrice)}</span>
+                      <span className="font-bold text-[#111111] text-sm">{formatPrice(itemPrice)}</span>
                       {item.discount_percent > 0 && (
                         <span className="text-xs text-gray-400 line-through">{formatPrice(item.price)}</span>
                       )}
@@ -81,7 +81,7 @@ export default function CartPage() {
                         </button>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="font-bold text-navy-900 text-sm">{formatPrice(itemPrice * item.quantity)}</span>
+                        <span className="font-bold text-[#111111] text-sm">{formatPrice(itemPrice * item.quantity)}</span>
                         <button onClick={() => removeFromCart(item.id)} className="text-gray-300 hover:text-red-500 transition-colors">
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -95,8 +95,8 @@ export default function CartPage() {
 
           {/* Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-gray-50 border border-gray-100 p-6 sticky top-24">
-              <h2 className="font-semibold text-navy-900 text-base mb-5 pb-4 border-b border-gray-200">Order Summary</h2>
+            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 sticky top-24 shadow-card">
+              <h2 className="font-semibold text-[#111111] text-base mb-5 pb-4 border-b border-[#E5E7EB]">Order Summary</h2>
               <div className="space-y-2 mb-5">
                 {cart.map((item) => {
                   const p = item.discount_percent > 0 ? item.price * (1 - item.discount_percent / 100) : item.price;
@@ -109,13 +109,13 @@ export default function CartPage() {
                 })}
               </div>
               <div className="border-t border-gray-200 pt-4 mb-6">
-                <div className="flex justify-between font-bold text-navy-900">
+                <div className="flex justify-between font-bold text-[#111111]">
                   <span>Total</span>
                   <span className="text-lg">{formatPrice(cartTotal)}</span>
                 </div>
               </div>
               <Link href="/checkout" className="btn-primary w-full py-3 justify-center">
-                Checkout <ArrowRight className="w-4 h-4" />
+                <MessageCircle className="w-4 h-4" /> WhatsApp Checkout <ArrowRight className="w-4 h-4" />
               </Link>
               <Link href="/shop" className="btn-secondary w-full py-3 justify-center mt-3 text-sm">
                 Continue Shopping

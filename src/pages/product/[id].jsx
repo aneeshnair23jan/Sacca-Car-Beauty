@@ -38,7 +38,7 @@ export default function ProductPage() {
         <SEO title="Loading Product" />
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-gold-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[#8DFF2F] border-t-transparent rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -50,7 +50,7 @@ export default function ProductPage() {
         <SEO title="Product Not Found" />
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center">
-          <p className="text-2xl font-display font-bold text-navy-900 mb-4">Product not found</p>
+          <p className="text-2xl font-extrabold text-[#111111] mb-4">Product not found</p>
           <Link href="/shop" className="btn-primary">Back to Shop</Link>
         </div>
       </div>
@@ -105,16 +105,16 @@ export default function ProductPage() {
       <Navbar />
 
       {/* Breadcrumb */}
-      <div className="border-b border-gray-100 bg-gray-50">
+      <div className="border-b border-[#E5E7EB] bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <nav className="flex items-center gap-1.5 text-xs text-gray-500">
-            <Link href="/" className="hover:text-gold-600 transition-colors">Home</Link>
+            <Link href="/" className="hover:text-[#00A83D] transition-colors">Home</Link>
             <ChevronRight className="w-3 h-3" />
-            <Link href="/shop" className="hover:text-gold-600 transition-colors">Shop</Link>
+            <Link href="/shop" className="hover:text-[#00A83D] transition-colors">Shop</Link>
             {product.category_name && (
               <>
                 <ChevronRight className="w-3 h-3" />
-                <Link href={`/shop?category=${product.category_id}`} className="hover:text-gold-600 transition-colors">{product.category_name}</Link>
+                <Link href={`/shop?category=${product.category_id}`} className="hover:text-[#00A83D] transition-colors">{product.category_name}</Link>
               </>
             )}
             <ChevronRight className="w-3 h-3" />
@@ -140,7 +140,7 @@ export default function ProductPage() {
                 </div>
               )}
               {product.discount_percent > 0 && (
-                <div className="absolute top-4 left-4 bg-gold-600 text-white text-xs font-bold px-3 py-1 tracking-wide">
+                <div className="absolute top-4 left-4 bg-[#8DFF2F] text-[#111111] text-xs font-bold px-3 py-1 rounded-md tracking-wide">
                   -{product.discount_percent}% OFF
                 </div>
               )}
@@ -151,7 +151,7 @@ export default function ProductPage() {
                   <button
                     key={img.id}
                     onClick={() => setSelectedImage(i)}
-                    className={`flex-shrink-0 w-16 h-16 overflow-hidden border-2 transition-colors ${selectedImage === i ? 'border-gold-600' : 'border-transparent hover:border-gray-300'}`}
+                    className={`flex-shrink-0 w-16 h-16 overflow-hidden border-2 rounded-md transition-colors ${selectedImage === i ? 'border-[#8DFF2F]' : 'border-transparent hover:border-gray-300'}`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={img.url} alt="" className="w-full h-full object-cover" />
@@ -166,11 +166,11 @@ export default function ProductPage() {
             {product.category_name && (
               <p className="section-label mb-2">{product.category_name}</p>
             )}
-            <h1 className="font-display text-3xl font-bold text-navy-900 mb-4 leading-tight">{product.name}</h1>
+            <h1 className="text-3xl font-extrabold text-[#111111] mb-4 leading-tight">{product.name}</h1>
 
             {/* Price */}
             <div className="flex items-baseline gap-3 mb-5">
-              <span className="text-3xl font-bold text-navy-900">{formatPrice(discountedPrice)}</span>
+              <span className="text-3xl font-extrabold text-[#111111]">{formatPrice(discountedPrice)}</span>
               {product.discount_percent > 0 && (
                 <span className="text-lg text-gray-400 line-through">{formatPrice(product.price)}</span>
               )}
@@ -259,13 +259,13 @@ export default function ProductPage() {
                 href={buildWhatsAppMessage()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-5 text-sm tracking-wide uppercase transition-colors"
+                className="flex-1 btn-primary py-3 px-5"
               >
                 <MessageCircle className="w-4 h-4" /> Order via WhatsApp
               </a>
               <button
                 onClick={() => toggleWishlist(product)}
-                className={`w-12 h-12 flex items-center justify-center border transition-colors flex-shrink-0 ${wishlisted ? 'bg-gold-600 border-gold-600 text-white' : 'border-gray-200 text-gray-400 hover:border-gold-400 hover:text-gold-600'}`}
+                className={`w-12 h-12 rounded-md flex items-center justify-center border transition-colors flex-shrink-0 ${wishlisted ? 'bg-[#111111] border-[#111111] text-white' : 'border-[#E5E7EB] text-gray-400 hover:border-[#8DFF2F] hover:text-[#111111]'}`}
                 aria-label="Wishlist"
               >
                 <Heart className={`w-5 h-5 ${wishlisted ? 'fill-white' : ''}`} />
@@ -279,7 +279,7 @@ export default function ProductPage() {
                 { icon: RotateCcw, text: 'Easy Returns' },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-2 bg-gray-50 px-3 py-2.5">
-                  <Icon className="w-4 h-4 text-gold-600 flex-shrink-0" />
+                  <Icon className="w-4 h-4 text-[#00A83D] flex-shrink-0" />
                   <span className="text-xs font-medium text-gray-700">{text}</span>
                 </div>
               ))}
