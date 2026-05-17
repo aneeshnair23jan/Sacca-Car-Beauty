@@ -60,13 +60,20 @@ export default function ShopPage() {
       <Navbar />
 
       {/* Page header */}
-      <div className="bg-white border-b border-[#E5E7EB] py-10 px-4">
-        <div className="max-w-7xl mx-auto">
+      <div className="relative overflow-hidden bg-[#111111] border-b border-[#E5E7EB] py-16 px-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/shop-collection-banner.png"
+          alt="Premium car accessories collection"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#111111]/90 via-[#111111]/62 to-[#111111]/10" />
+        <div className="relative max-w-7xl mx-auto">
           <p className="section-label mb-1">Our Collection</p>
-          <h1 className="text-3xl font-extrabold text-[#111111]">
+          <h1 className="text-3xl md:text-5xl font-extrabold text-white">
             {qSearch ? `Results for "${qSearch}"` : qCategory ? (categories.find((c) => c.id == qCategory)?.name || 'Products') : 'All Products'}
           </h1>
-          <p className="text-zinc-500 text-sm mt-2">{total} product{total !== 1 ? 's' : ''} found</p>
+          <p className="text-zinc-300 text-sm mt-3">{total} product{total !== 1 ? 's' : ''} found</p>
         </div>
       </div>
 

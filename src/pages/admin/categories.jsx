@@ -3,13 +3,14 @@ import axios from 'axios';
 import { Plus, Edit, Trash2, Tag, Save, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AdminLayout from '@/components/AdminLayout';
+import { getCategoryImage } from '@/lib/categoryImages';
 
 export default function AdminCategories() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState({ name: '', description: '' });
+  const [form, setForm] = useState({ name: '', description: '', image_url: '' });
   const [deleteId, setDeleteId] = useState(null);
   const [saving, setSaving] = useState(false);
 
@@ -20,8 +21,12 @@ export default function AdminCategories() {
 
   useEffect(() => { fetchCategories(); }, []);
 
-  const openAdd = () => { setEditingId(null); setForm({ name: '', description: '' }); setShowForm(true); };
-  const openEdit = (cat) => { setEditingId(cat.id); setForm({ name: cat.name, description: cat.description || '' }); setShowForm(true); };
+  const openAdd = () => { setEditingId(null); setForm({ name: '', description: '', image_url: '' }); setShowForm(true); };
+  const openEdit = (cat) => {
+    setEditingId(cat.id);
+    setForm({ name: cat.name, description: cat.description || '', image_url: cat.image_url || '' });
+    setShowForm(true);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,8 +51,8 @@ export default function AdminCategories() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/categories/${id}`);
-      toast.success('Category deleted');
+      const res = await axios.delete(`/api/categories/${id}`);
+      toast.success(res.data?.message || 'Category deleted');
       setDeleteId(null);
       fetchCategories();
     } catch (err) {
@@ -101,6 +106,35 @@ export default function AdminCategories() {
                 className="input-field"
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Image URL (optional)</label>
+              <input
+                type="text"
+                value={form.image_url}
+                onChange={(e) => setForm((f) => ({ ...f, image_url: e.target.value }))}
+                placeholder="/images/categories/floor-mats.png"
+                className="input-field"
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                Use a local path like /images/categories/floor-mats.png or a full image URL.
+              </p>
+            </div>
+            <div className="flex items-center gap-4 rounded-xl border border-gray-100 bg-gray-50 p-3">
+              <div className="w-20 h-20 rounded-xl overflow-hidden bg-white border border-gray-100 flex-shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={form.image_url || getCategoryImage(form.name)}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Category image preview</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Shows your custom image URL, or the matching default image when the URL is empty.
+                </p>
+              </div>
+            </div>
             <div className="flex gap-3">
               <button type="submit" disabled={saving} className="btn-primary flex items-center gap-2">
                 <Save className="w-4 h-4" />
@@ -132,8 +166,13 @@ export default function AdminCategories() {
                 <tr key={cat.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <div className="bg-primary-100 p-1.5 rounded-lg">
-                        <Tag className="w-4 h-4 text-primary-600" />
+                      <div className="w-10 h-10 rounded-lg bg-primary-100 overflow-hidden flex items-center justify-center flex-shrink-0">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={cat.image_url || getCategoryImage(cat.name)}
+                          alt=""
+                          className="w-full h-full object-cover"
+                        />
                       </div>
                       <span className="font-medium text-gray-900">{cat.name}</span>
                     </div>
@@ -153,9 +192,8 @@ export default function AdminCategories() {
                       </button>
                       <button
                         onClick={() => setDeleteId(cat.id)}
-                        disabled={cat.product_count > 0}
-                        title={cat.product_count > 0 ? 'Cannot delete category with products' : 'Delete'}
-                        className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                        title={cat.product_count > 0 ? 'Delete and move products to Uncategorized' : 'Delete'}
+                        className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -180,7 +218,9 @@ export default function AdminCategories() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl p-6 max-w-sm w-full shadow-xl">
             <h3 className="font-bold text-gray-900 text-lg mb-2">Delete Category?</h3>
-            <p className="text-gray-500 text-sm mb-6">This will permanently delete this category.</p>
+            <p className="text-gray-500 text-sm mb-6">
+              This will permanently delete this category. Products in this category will be moved to Uncategorized.
+            </p>
             <div className="flex gap-3">
               <button onClick={() => setDeleteId(null)} className="flex-1 btn-secondary">Cancel</button>
               <button onClick={() => handleDelete(deleteId)} className="flex-1 btn-danger">Delete</button>

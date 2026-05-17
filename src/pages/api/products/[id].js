@@ -1,7 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import mongoose from 'mongoose';
 import { connectDb, Product } from '@/lib/db';
 import { requireAuth } from '@/lib/auth';
+import { isMultipartRequest, readJsonRequestBody } from '@/lib/apiRequest';
 import { upload, runMiddleware } from '@/lib/upload';
 import { parseIdList, parseJsonArray, serializeProduct } from './index';
 
@@ -10,6 +12,10 @@ export const config = { api: { bodyParser: false } };
 export default async function handler(req, res) {
   const { id } = req.query;
   await connectDb();
+
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(400).json({ error: 'Invalid product ID' });
+  }
 
   // ── GET /api/products/:id ──────────────────────────────────────────────────
   if (req.method === 'GET') {
@@ -37,7 +43,12 @@ export default async function handler(req, res) {
   if (req.method === 'PUT') {
     try {
       requireAuth(req);
-      await runMiddleware(req, res, upload.array('images', 10));
+      if (isMultipartRequest(req)) {
+        await runMiddleware(req, res, upload.array('images', 10));
+      } else {
+        req.body = await readJsonRequestBody(req);
+        req.files = [];
+      }
 
       const existing = await Product.findById(id);
       if (!existing) return res.status(404).json({ error: 'Product not found' });

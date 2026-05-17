@@ -43,12 +43,12 @@ export default function ProductCard({ product }) {
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
-            <div className="w-full h-full hero-visual flex items-center justify-center p-6">
-              <div className="car-silhouette scale-75 w-full">
-                <span className="wheel wheel-left" />
-                <span className="wheel wheel-right" />
-              </div>
-            </div>
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src="/images/product-fallback-accessories.png"
+              alt="Premium car accessories"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
           )}
 
           <div className="absolute inset-x-0 top-0 p-3 flex items-start justify-between gap-2">

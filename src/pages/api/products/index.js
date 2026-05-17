@@ -1,5 +1,6 @@
 import { connectDb, Product, Category } from '@/lib/db';
 import { requireAuth } from '@/lib/auth';
+import { isMultipartRequest, readJsonRequestBody } from '@/lib/apiRequest';
 import { upload, runMiddleware } from '@/lib/upload';
 
 export const config = { api: { bodyParser: false } };
@@ -47,7 +48,12 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       requireAuth(req);
-      await runMiddleware(req, res, upload.array('images', 10));
+      if (isMultipartRequest(req)) {
+        await runMiddleware(req, res, upload.array('images', 10));
+      } else {
+        req.body = await readJsonRequestBody(req);
+        req.files = [];
+      }
 
       const {
         name, description, price,

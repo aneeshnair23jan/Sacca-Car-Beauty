@@ -31,10 +31,10 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       requireAuth(req);
-      const { name, description } = req.body;
+      const { name, description, image_url } = req.body;
       if (!name) return res.status(400).json({ error: 'Category name is required' });
 
-      const category = await Category.create({ name, description });
+      const category = await Category.create({ name, description, image_url });
       return res.status(201).json({ ...category.toObject(), id: category._id.toString() });
     } catch (err) {
       if (err.status) return res.status(err.status).json({ error: err.message });

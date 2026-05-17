@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import {
-  ArrowRight, BadgeCheck, Camera, Car, CheckCircle2, ChevronRight, Gauge,
-  MessageCircle, Shield, Sparkles, Star, Truck, Wrench, Zap,
+  ArrowRight, BadgeCheck, CheckCircle2, ChevronRight, Gauge,
+  MessageCircle, Shield, Sparkles, Star, Wrench,
 } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { getSettingsFromDb } from '@/lib/getSettings';
@@ -12,17 +12,7 @@ import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import SEO from '@/components/SEO';
 import { useSettings } from '@/context/SettingsContext';
-
-const categoriesFallback = [
-  'Seat Covers',
-  'Floor Mats',
-  'LED Lights',
-  'Car Perfumes',
-  'Dash Cameras',
-  'Cleaning Kits',
-  'Mobile Holders',
-  'Steering Covers',
-];
+import { fallbackCategories, getCategoryImage } from '@/lib/categoryImages';
 
 const qualityCards = [
   { title: 'Durable Materials', text: 'Selected for heat, dust, wear, and daily road abuse.', icon: Shield },
@@ -70,7 +60,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
 
   const whatsappHref = `https://wa.me/${settings.whatsapp_number?.replace(/\D/g, '') || ''}`;
-  const categoryNames = categories.length ? categories.map((item) => item.name) : categoriesFallback;
+  const displayCategories = categories.length ? categories : fallbackCategories;
 
   const storeJsonLd = useMemo(() => ({
     '@context': 'https://schema.org',
@@ -88,7 +78,7 @@ export default function HomePage() {
     ]).then(([featured, best, categoryRes]) => {
       setFeaturedProducts(featured.data.products || []);
       setBestSellers(best.data.products || []);
-      setCategories((categoryRes.data || []).filter((item) => item.product_count > 0));
+      setCategories(categoryRes.data || []);
     }).finally(() => setLoading(false));
   }, []);
 
@@ -161,7 +151,7 @@ export default function HomePage() {
       <main className="flex-1">
         <CinematicCarStory />
         <StoryIntro whatsappHref={whatsappHref} />
-        <CategoryShowcase categoryNames={categoryNames} trackRef={categoryTrackRef} />
+        <CategoryShowcase categories={displayCategories} trackRef={categoryTrackRef} />
         <QualitySection />
         <ProductCollection loading={loading} products={bestSellers.length ? bestSellers : featuredProducts} />
         <ScrollStory storyRef={storyRef} />
@@ -481,16 +471,6 @@ function ThreeCinematicCar({ progress }) {
   return <div ref={mountRef} className="three-car-canvas" />;
 }
 
-function AccessoryCallout({ opacity, className, title, text }) {
-  return (
-    <motion.div style={{ opacity }} className={`cinema-callout ${className}`}>
-      <span className="callout-dot" />
-      <p>{title}</p>
-      <small>{text}</small>
-    </motion.div>
-  );
-}
-
 function EngineAnimation() {
   return (
     <div className="engine-stage" aria-label="Animated working performance engine">
@@ -535,33 +515,6 @@ function EngineAnimation() {
   );
 }
 
-function LoadingExperience() {
-  return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.45 } }}
-      className="fixed inset-0 z-[100] bg-[#111111] text-white flex items-center justify-center"
-    >
-      <div className="w-full max-w-xl px-6 text-center">
-        <div className="mx-auto mb-8 h-24 relative overflow-hidden">
-          <motion.div
-            initial={{ x: '-20%' }}
-            animate={{ x: '120%' }}
-            transition={{ duration: 1.25, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute top-1/2 h-1 w-48 -translate-y-1/2 rounded-full bg-[#8DFF2F] blur-sm"
-          />
-          <Car className="relative z-10 mx-auto w-20 h-20 text-[#8DFF2F]" />
-        </div>
-        <p className="text-sm uppercase tracking-[0.22em] text-[#8DFF2F]">Loading Premium Drive Experience</p>
-        <div className="mt-6 h-1 rounded-full bg-white/10 overflow-hidden">
-          <motion.div initial={{ width: 0 }} animate={{ width: '100%' }} transition={{ duration: 1.55, ease: 'easeInOut' }} className="h-full bg-[#8DFF2F]" />
-        </div>
-        <p className="mt-5 text-sm text-white/55">Upgrade your drive with premium accessories.</p>
-      </div>
-    </motion.div>
-  );
-}
-
 function StoryIntro({ whatsappHref }) {
   return (
     <section className="bg-[#F5F7F8] py-24">
@@ -576,8 +529,14 @@ function StoryIntro({ whatsappHref }) {
             <MessageCircle className="w-4 h-4" /> Talk to a specialist
           </a>
         </div>
-        <div className="relative min-h-96 hero-visual rounded-[32px] border border-white brand-glow overflow-hidden reveal-copy">
-          <div className="car-silhouette mt-36"><span className="wheel wheel-left" /><span className="wheel wheel-right" /></div>
+        <div className="relative min-h-96 rounded-[32px] border border-white brand-glow overflow-hidden reveal-copy bg-[#111111]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/home-interior-accessories.png"
+            alt="Premium car interior with fitted accessories"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-tr from-black/35 via-transparent to-white/15" />
           <div className="absolute top-6 right-6 glass p-4 max-w-[220px]">
             <p className="text-sm font-bold">OEM-plus styling</p>
             <p className="text-xs text-zinc-500 mt-1">Clean upgrades that feel integrated, not added on.</p>
@@ -588,7 +547,7 @@ function StoryIntro({ whatsappHref }) {
   );
 }
 
-function CategoryShowcase({ categoryNames, trackRef }) {
+function CategoryShowcase({ categories, trackRef }) {
   return (
     <section className="bg-white py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
@@ -596,23 +555,35 @@ function CategoryShowcase({ categoryNames, trackRef }) {
         <h2 className="section-title">Choose your upgrade path.</h2>
       </div>
       <div ref={trackRef} className="flex gap-4 px-4 sm:px-6 lg:px-8 min-w-max">
-        {[...categoryNames, ...categoriesFallback.slice(0, 4)].map((category, index) => (
+        {categories.map((category, index) => {
+          const name = typeof category === 'string' ? category : category.name;
+          const imageUrl = typeof category === 'string' ? null : category.image_url;
+          return (
           <Link
-            key={`${category}-${index}`}
-            href={`/shop?search=${encodeURIComponent(category)}`}
-            className="group w-72 h-72 rounded-[28px] bg-[#F5F7F8] border border-[#E5E7EB] p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:border-[#8DFF2F] hover:shadow-card-hover"
+            key={`${name}-${index}`}
+            href={`/shop?search=${encodeURIComponent(name)}`}
+            className="group relative w-72 h-72 rounded-[28px] bg-[#111111] border border-[#E5E7EB] overflow-hidden p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:border-[#8DFF2F] hover:shadow-card-hover"
           >
-            <span className="text-6xl font-display font-bold text-[#111111]/10">{String(index + 1).padStart(2, '0')}</span>
-            <span>
-              <span className="block text-2xl font-display font-bold text-[#111111]">{category}</span>
-              <span className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-[#00A83D]">Explore <ChevronRight className="w-4 h-4" /></span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={imageUrl || getCategoryImage(name)}
+              alt={`${name} category`}
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <span className="absolute inset-0 bg-gradient-to-t from-[#111111]/88 via-[#111111]/35 to-transparent" />
+            <span className="relative text-6xl font-display font-bold text-white/18">{String(index + 1).padStart(2, '0')}</span>
+            <span className="relative">
+              <span className="block text-2xl font-display font-bold text-white drop-shadow-sm">{name}</span>
+              <span className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-[#8DFF2F]">Explore <ChevronRight className="w-4 h-4" /></span>
             </span>
           </Link>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
 }
+
 
 function QualitySection() {
   return (
@@ -673,24 +644,16 @@ function ScrollStory({ storyRef }) {
   return (
     <section ref={storyRef} className="bg-[#111111] text-white py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[1fr_1fr] gap-12">
-        <div className="lg:sticky lg:top-24 h-[560px] rounded-[32px] bg-gradient-to-br from-white/12 to-white/5 border border-white/10 overflow-hidden">
+        <div className="relative lg:sticky lg:top-24 h-[560px] rounded-[32px] bg-gradient-to-br from-white/12 to-white/5 border border-white/10 overflow-hidden">
           <div className="absolute inset-0 surface-grid opacity-20" />
           <div className="relative h-full flex items-center">
-            <div className="car-silhouette w-full"><span className="wheel wheel-left" /><span className="wheel wheel-right" /></div>
-            {['Covers', 'LED', 'Dashcam', 'Care'].map((item, index) => (
-              <motion.div
-                key={item}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ amount: 0.65 }}
-                transition={{ delay: index * 0.08 }}
-                className={`absolute glass text-[#111111] px-4 py-2 text-sm font-bold ${
-                  ['top-12 left-10', 'top-20 right-10', 'bottom-24 left-12', 'bottom-16 right-12'][index]
-                }`}
-              >
-                {item}
-              </motion.div>
-            ))}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/story-protect-interior.png"
+              alt="Protected premium car interior with fitted accessories"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#111111]/72 via-[#111111]/20 to-transparent" />
           </div>
         </div>
         <div className="space-y-28 py-8">

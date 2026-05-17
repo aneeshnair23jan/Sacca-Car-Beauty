@@ -73,11 +73,14 @@ export default function Footer() {
 
         <div className="mt-12 pt-6 border-t border-[#E5E7EB] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-500">
           <p>Copyright {new Date().getFullYear()} {settings.shop_name || 'Sacca Car Beauty'}. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <Link href="/cart" className="hover:text-[#111111]">Cart</Link>
-            <Link href="/checkout" className="hover:text-[#111111]">WhatsApp Checkout</Link>
-            <Link href="/admin/login" className="hover:text-[#111111]">Admin</Link>
-          </div>
+          <a
+            href="https://touchpointe.digital"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-[#111111] transition-colors"
+          >
+            Powered by touchpointe.digital
+          </a>
         </div>
       </div>
     </footer>

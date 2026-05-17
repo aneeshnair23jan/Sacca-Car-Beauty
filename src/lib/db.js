@@ -23,7 +23,11 @@ export async function connectDb() {
 // ── Schemas ──────────────────────────────────────────────────────────────────
 
 const CategorySchema = new mongoose.Schema(
-  { name: { type: String, required: true, unique: true }, description: String },
+  {
+    name: { type: String, required: true, unique: true },
+    description: String,
+    image_url: String,
+  },
   { timestamps: true }
 );
 
@@ -152,7 +156,21 @@ async function seedDefaults() {
   }
 
   // Categories
-  const defaultCategories = ['Car Care', 'Interior', 'Exterior', 'Electronics', 'Performance'];
+  const defaultCategories = [
+    'Car Care',
+    'Interior',
+    'Exterior',
+    'Electronics',
+    'Performance',
+    'Seat Covers',
+    'Floor Mats',
+    'LED Lights',
+    'Car Perfumes',
+    'Dash Cameras',
+    'Cleaning Kits',
+    'Mobile Holders',
+    'Steering Covers',
+  ];
   for (const name of defaultCategories) {
     await Category.updateOne({ name }, { $setOnInsert: { name } }, { upsert: true });
   }

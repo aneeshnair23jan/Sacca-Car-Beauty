@@ -24,8 +24,14 @@ export default function AboutPage({ cmsContent }) {
               <h1 className="text-5xl md:text-6xl font-extrabold text-[#111111] leading-tight">{cms.title}</h1>
               <p className="mt-6 text-zinc-600 leading-8">{cms.description}</p>
             </div>
-            <div className="hero-visual rounded-2xl min-h-96 border border-white brand-glow overflow-hidden">
-              <div className="car-silhouette mt-32"><span className="wheel wheel-left" /><span className="wheel wheel-right" /></div>
+            <div className="relative rounded-2xl min-h-96 border border-white brand-glow overflow-hidden bg-[#111111]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/about-studio-accessories.png"
+                alt="Premium car accessories display in a detailing studio"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-white/10" />
             </div>
           </div>
         </section>
