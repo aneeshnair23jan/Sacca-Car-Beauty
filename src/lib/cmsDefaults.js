@@ -29,6 +29,11 @@ export const defaultCmsContent = {
       { title: 'Fitment Help', text: 'Vehicle-led product guidance.' },
       { title: 'SEO Ready', text: 'SSR pages and structured data.' },
     ],
+    featuresSection: {
+      label: 'Quality',
+      title: 'Premium quality from inside out.',
+      description: 'Every detail is chosen for daily usability, long-term finish, and that quietly expensive automotive feel.',
+    },
     story: {
       label: 'Brand Story',
       title: 'Built for owners who see the car as a signature.',
@@ -64,9 +69,36 @@ export const defaultCmsContent = {
     },
     installLabel: 'Installation Showcase',
     installShowcase: [
-      { title: 'Before', text: 'Factory cabin lighting with ordinary trim.' },
-      { title: 'After', text: 'Ambient lighting, premium mats, clean console protection.' },
-      { title: 'Reels', text: 'Install reels and customer car visuals ready for social content.' },
+      {
+        title: 'Before',
+        text: 'Factory cabin lighting with ordinary trim.',
+        details: [
+          { title: 'Baseline check', text: 'Review cabin lighting, surface wear, storage gaps, and current accessory fit.' },
+          { title: 'Fitment notes', text: 'Identify model-specific sizes, mounting points, and finish preferences before upgrade.' },
+          { title: 'Priority list', text: 'Separate must-have protection from visual upgrades so the result stays clean.' },
+          { title: 'Quote ready', text: 'Prepare product options that match budget, availability, and installation needs.' },
+        ],
+      },
+      {
+        title: 'After',
+        text: 'Ambient lighting, premium mats, clean console protection.',
+        details: [
+          { title: 'Installed finish', text: 'Accessories sit flush, colors match the cabin, and visible clutter is reduced.' },
+          { title: 'Usability check', text: 'Controls, storage, charging, mats, and lighting remain practical for daily driving.' },
+          { title: 'Care guidance', text: 'Share cleaning and maintenance tips so the upgraded look lasts longer.' },
+          { title: 'Delivery handoff', text: 'Confirm order details, support route, and future add-on recommendations.' },
+        ],
+      },
+      {
+        title: 'Reels',
+        text: 'Install reels and customer car visuals ready for social content.',
+        details: [
+          { title: 'Shot list', text: 'Capture before, installation, close-up finish, and final reveal moments.' },
+          { title: 'Product focus', text: 'Highlight the accessories, textures, lighting, and fitment details customers care about.' },
+          { title: 'Customer proof', text: 'Turn completed installations into trust-building visual content.' },
+          { title: 'Campaign ready', text: 'Reuse the showcase across social, product pages, and WhatsApp recommendations.' },
+        ],
+      },
     ],
     testimonials: [
       { quote: 'The WhatsApp checkout made choosing mats and ambient lighting simple.', name: 'Verified customer 1' },
@@ -83,6 +115,12 @@ export const defaultCmsContent = {
       description: 'Send us your vehicle details and cart. We will confirm compatibility, availability, and delivery.',
       button: 'Start WhatsApp Order',
     },
+    checkoutSteps: [
+      { title: 'Cart', text: 'Customer details, product names, quantities, and total amount stay in the message.' },
+      { title: 'Address', text: 'Delivery and contact details are prepared before sending.' },
+      { title: 'Order Summary', text: 'The full order is reviewed before WhatsApp confirmation.' },
+      { title: 'WhatsApp Message', text: 'The final message is ready to send directly to your team.' },
+    ],
   },
   about: {
     label: 'About Us',

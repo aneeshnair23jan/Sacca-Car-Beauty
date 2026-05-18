@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Car, FileText, MapPin, MessageCircle, Phone, ShoppingBag, User } from 'lucide-react';
 import { getSettingsFromDb } from '@/lib/getSettings';
@@ -8,8 +8,10 @@ import SEO from '@/components/SEO';
 import { useCart } from '@/context/CartContext';
 import { useSettings } from '@/context/SettingsContext';
 
+const PROFILE_KEY = 'sacca_profile';
+
 export default function CheckoutPage() {
-  const { cart, cartTotal } = useCart();
+  const { cart, cartTotal, clearCart } = useCart();
   const { settings, formatPrice } = useSettings();
   const [form, setForm] = useState({
     name: '',
@@ -19,6 +21,63 @@ export default function CheckoutPage() {
     vehicle: '',
     notes: '',
   });
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(PROFILE_KEY);
+      if (!saved) return;
+
+      const profile = JSON.parse(saved);
+      setForm((current) => ({
+        ...current,
+        name: current.name || profile.name || '',
+        phone: current.phone || profile.phone?.replace(/\D/g, '').slice(0, 10) || '',
+        address: current.address || profile.address || '',
+        pincode: current.pincode || profile.pincode?.replace(/\D/g, '').slice(0, 6) || '',
+        vehicle: current.vehicle || profile.vehicle || '',
+      }));
+    } catch {}
+  }, []);
+
+  const validateCheckout = () => {
+    const nextErrors = {};
+    const phoneDigits = form.phone.replace(/\D/g, '');
+    const pincodeDigits = form.pincode.replace(/\D/g, '');
+
+    if (!/^[6-9]\d{9}$/.test(phoneDigits)) {
+      nextErrors.phone = 'Enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.';
+    }
+
+    if (!/^\d{6}$/.test(pincodeDigits)) {
+      nextErrors.pincode = 'Enter a valid 6-digit pincode.';
+    }
+
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const handleCheckoutClick = (e) => {
+    if (!validateCheckout()) {
+      e.preventDefault();
+      return;
+    }
+
+    try {
+      const saved = localStorage.getItem(PROFILE_KEY);
+      const profile = saved ? JSON.parse(saved) : {};
+      localStorage.setItem(PROFILE_KEY, JSON.stringify({
+        ...profile,
+        name: form.name,
+        phone: form.phone,
+        address: form.address,
+        pincode: form.pincode,
+        vehicle: form.vehicle,
+      }));
+    } catch {}
+
+    clearCart();
+  };
 
   const buildWhatsAppMessage = () => {
     const lines = [
@@ -86,7 +145,19 @@ export default function CheckoutPage() {
 
               <div className="space-y-4">
                 <Input icon={User} label="Full Name" value={form.name} placeholder="Your full name" onChange={(name) => setForm((f) => ({ ...f, name }))} />
-                <Input icon={Phone} label="Phone Number" value={form.phone} placeholder="Your phone number" onChange={(phone) => setForm((f) => ({ ...f, phone }))} />
+                <Input
+                  icon={Phone}
+                  label="Phone Number"
+                  value={form.phone}
+                  placeholder="10-digit mobile number"
+                  inputMode="numeric"
+                  maxLength={10}
+                  error={errors.phone}
+                  onChange={(phone) => {
+                    setErrors((current) => ({ ...current, phone: '' }));
+                    setForm((f) => ({ ...f, phone: phone.replace(/\D/g, '').slice(0, 10) }));
+                  }}
+                />
 
                 <label>
       <span className="block text-xs font-semibold text-zinc-500 uppercase mb-1.5">Delivery Address</span>
@@ -103,7 +174,19 @@ export default function CheckoutPage() {
                 </label>
 
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <Input icon={MapPin} label="Pincode" value={form.pincode} placeholder="Delivery pincode" onChange={(pincode) => setForm((f) => ({ ...f, pincode }))} />
+                  <Input
+                    icon={MapPin}
+                    label="Pincode"
+                    value={form.pincode}
+                    placeholder="6-digit pincode"
+                    inputMode="numeric"
+                    maxLength={6}
+                    error={errors.pincode}
+                    onChange={(pincode) => {
+                      setErrors((current) => ({ ...current, pincode: '' }));
+                      setForm((f) => ({ ...f, pincode: pincode.replace(/\D/g, '').slice(0, 6) }));
+                    }}
+                  />
                   <Input icon={Car} label="Vehicle Details" value={form.vehicle} placeholder="Brand, model, year" onChange={(vehicle) => setForm((f) => ({ ...f, vehicle }))} />
                 </div>
 
@@ -180,6 +263,7 @@ export default function CheckoutPage() {
               </div>
               <a
                 href={buildWhatsAppMessage()}
+                onClick={handleCheckoutClick}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full btn-primary py-4"
@@ -197,7 +281,7 @@ export default function CheckoutPage() {
   );
 }
 
-function Input({ icon: Icon, label, value, placeholder, onChange }) {
+function Input({ icon: Icon, label, value, placeholder, onChange, error, inputMode, maxLength }) {
   return (
     <label>
       <span className="block text-xs font-semibold text-zinc-500 uppercase mb-1.5">{label}</span>
@@ -207,9 +291,13 @@ function Input({ icon: Icon, label, value, placeholder, onChange }) {
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="input-field pl-10"
+          inputMode={inputMode}
+          maxLength={maxLength}
+          className={`input-field pl-10 ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : ''}`}
+          aria-invalid={error ? 'true' : 'false'}
         />
       </div>
+      {error && <p className="mt-1.5 text-xs font-semibold text-red-600">{error}</p>}
     </label>
   );
 }

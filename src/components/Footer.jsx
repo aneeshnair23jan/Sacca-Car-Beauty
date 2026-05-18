@@ -9,20 +9,20 @@ export default function Footer() {
   const whatsappHref = `https://wa.me/${settings.whatsapp_number?.replace(/\D/g, '') || ''}`;
 
   return (
-    <footer className="bg-white border-t border-[#E5E7EB] text-zinc-600 pb-24 sm:pb-0">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10">
-          <div>
-            <p className="section-label">Sacca Car Beauty</p>
-            <h2 className="text-3xl font-extrabold text-[#111111] mb-4">
+    <footer className="bg-white border-t border-[#E5E7EB] text-zinc-600 pb-20 sm:pb-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-9 sm:py-10">
+        <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-[1.45fr_0.8fr_0.8fr_1fr] lg:gap-10 items-start">
+          <div className="max-w-md">
+            <p className="section-label">{settings.shop_name || 'Sacca Car Beauty'}</p>
+            <h2 className="text-2xl font-extrabold text-[#111111] mb-3">
               {cms.global.footerTitle}
             </h2>
-            <p className="text-sm leading-7 text-zinc-500 max-w-md">
+            <p className="text-sm leading-6 text-zinc-500 max-w-md">
               {cms.global.footerDescription || settings.shop_description}
             </p>
-            <div className="flex gap-3 mt-6">
+            <div className="flex gap-3 mt-5">
               {[Instagram, Facebook, Twitter].map((Icon, index) => (
-                <a key={index} href="#" className="w-10 h-10 rounded-md border border-[#E5E7EB] flex items-center justify-center hover:text-[#111111] hover:border-[#8DFF2F] hover:bg-[#8DFF2F]/15 transition-colors" aria-label="Social link">
+                <a key={index} href="#" className="w-9 h-9 rounded-md border border-[#E5E7EB] flex items-center justify-center hover:text-[#111111] hover:border-[#8DFF2F] hover:bg-[#8DFF2F]/15 transition-colors" aria-label="Social link">
                   <Icon className="w-4 h-4" />
                 </a>
               ))}
@@ -48,30 +48,30 @@ export default function Footer() {
             ]}
           />
 
-          <div>
-            <h3 className="text-[#111111] text-sm font-bold uppercase mb-5">Contact</h3>
-            <div className="space-y-4 text-sm">
-              <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-[#111111] transition-colors">
+          <div className="lg:justify-self-end lg:min-w-[310px]">
+            <h3 className="text-[#111111] text-sm font-bold uppercase tracking-wide mb-4">Contact</h3>
+            <div className="space-y-3 text-sm">
+              <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="grid grid-cols-[20px_1fr] items-center gap-3 hover:text-[#111111] transition-colors">
                 <MessageCircle className="w-4 h-4 text-[#00A83D]" />
-                {settings.whatsapp_number || 'WhatsApp'}
+                <span>{settings.whatsapp_number || 'WhatsApp'}</span>
               </a>
-              <span className="flex items-center gap-3">
+              <span className="grid grid-cols-[20px_1fr] items-center gap-3">
                 <Phone className="w-4 h-4 text-[#00A83D]" />
-                {cms.global.support}
+                <span>{cms.global.support}</span>
               </span>
-              <span className="flex items-center gap-3">
+              <span className="grid grid-cols-[20px_1fr] items-center gap-3">
                 <Mail className="w-4 h-4 text-[#00A83D]" />
-                {cms.global.email}
+                <span>{cms.global.email}</span>
               </span>
-              <span className="flex items-center gap-3">
+              <span className="grid grid-cols-[20px_1fr] items-center gap-3">
                 <MapPin className="w-4 h-4 text-[#00A83D]" />
-                {cms.global.delivery}
+                <span>{cms.global.delivery}</span>
               </span>
             </div>
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-[#E5E7EB] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-500">
+        <div className="mt-8 pt-5 border-t border-[#E5E7EB] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-500">
           <p>Copyright {new Date().getFullYear()} {settings.shop_name || 'Sacca Car Beauty'}. All rights reserved.</p>
           <a
             href="https://touchpointe.digital"
@@ -89,8 +89,8 @@ export default function Footer() {
 
 function FooterList({ title, links }) {
   return (
-    <div>
-      <h3 className="text-[#111111] text-sm font-bold uppercase mb-5">{title}</h3>
+    <div className="lg:justify-self-center">
+      <h3 className="text-[#111111] text-sm font-bold uppercase tracking-wide mb-4">{title}</h3>
       <ul className="space-y-3 text-sm">
         {links.map((link) => (
           <li key={link.href}>

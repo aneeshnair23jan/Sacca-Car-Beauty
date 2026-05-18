@@ -1,7 +1,7 @@
 import { connectDb, Product, Category } from '@/lib/db';
 import { requireAuth } from '@/lib/auth';
 import { isMultipartRequest, readJsonRequestBody } from '@/lib/apiRequest';
-import { upload, runMiddleware } from '@/lib/upload';
+import { upload, runMiddleware, uploadFilesToStorage, getStoredFileUrl } from '@/lib/upload';
 
 export const config = { api: { bodyParser: false } };
 
@@ -66,8 +66,9 @@ export default async function handler(req, res) {
 
       if (!name || !price) return res.status(400).json({ error: 'Name and price are required' });
 
-      const images = (req.files || []).map((f, i) => ({
-        filename: f.filename,
+      const storedImages = await uploadFilesToStorage(req.files || []);
+      const images = storedImages.map((image, i) => ({
+        filename: image.filename,
         is_primary: i === 0,
         sort_order: i,
       }));
@@ -117,7 +118,7 @@ export function serializeProduct(p) {
     id: p._id?.toString(),
     category_id: p.category_id?._id?.toString() || p.category_id?.toString() || null,
     category_name: p.category_id?.name || null,
-    primary_image_url: primary ? `/uploads/${primary.filename}` : null,
+    primary_image_url: primary ? getStoredFileUrl(primary.filename) : null,
     image_count: p.images?.length || 0,
     discounted_price: p.discount_percent > 0
       ? p.price * (1 - p.discount_percent / 100)

@@ -2,11 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import {
-  ArrowRight, BadgeCheck, CheckCircle2, ChevronRight, Gauge,
+  ArrowRight, BadgeCheck, CheckCircle2, ChevronLeft, ChevronRight, Gauge,
   MessageCircle, Shield, Sparkles, Star, Wrench,
 } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { getSettingsFromDb } from '@/lib/getSettings';
+import { parseCmsContent } from '@/lib/cms';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
@@ -14,44 +15,11 @@ import SEO from '@/components/SEO';
 import { useSettings } from '@/context/SettingsContext';
 import { fallbackCategories, getCategoryImage } from '@/lib/categoryImages';
 
-const qualityCards = [
-  { title: 'Durable Materials', text: 'Selected for heat, dust, wear, and daily road abuse.', icon: Shield },
-  { title: 'Perfect Fit', text: 'Chosen around clean installation and vehicle-friendly fitment.', icon: BadgeCheck },
-  { title: 'Easy Installation', text: 'Accessories that feel premium without making setup complicated.', icon: Wrench },
-  { title: 'Stylish Finish', text: 'Modern textures, tight forms, and an OEM-plus visual language.', icon: Sparkles },
-];
+const qualityIcons = [Shield, BadgeCheck, Wrench, Sparkles];
 
-const storySteps = [
-  {
-    title: 'Protect Your Interior',
-    text: 'Seat covers, floor mats, sunshades, and organizers preserve the cabin while keeping it refined.',
-    items: ['Seat Covers', 'Floor Mats', 'Sunshades'],
-  },
-  {
-    title: 'Upgrade Your Style',
-    text: 'LED accents, trims, spoilers, and exterior details add performance energy without clutter.',
-    items: ['LED Kits', 'Trims', 'Spoilers'],
-  },
-  {
-    title: 'Drive Smarter',
-    text: 'Dashcams, chargers, holders, and practical tech make every trip cleaner and easier.',
-    items: ['Dashcams', 'Chargers', 'Holders'],
-  },
-  {
-    title: 'Keep It Fresh',
-    text: 'Perfumes, cleaning kits, microfiber essentials, and care products keep the car showroom-ready.',
-    items: ['Perfumes', 'Detailing', 'Care Kits'],
-  },
-];
-
-const testimonials = [
-  { name: 'Aarav M.', quote: 'The fit and finish made my cabin feel like a higher trim car.' },
-  { name: 'Priya S.', quote: 'Fast WhatsApp ordering, clean recommendations, and premium products.' },
-  { name: 'Rohan K.', quote: 'The LED and mats combo changed the whole night-drive feel.' },
-];
-
-export default function HomePage() {
+export default function HomePage({ cmsContent }) {
   const { settings } = useSettings();
+  const cms = cmsContent.homepage;
   const storyRef = useRef(null);
   const categoryTrackRef = useRef(null);
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -65,10 +33,10 @@ export default function HomePage() {
   const storeJsonLd = useMemo(() => ({
     '@context': 'https://schema.org',
     '@type': 'Store',
-    name: settings.shop_name || 'AutoLux Accessories',
-    description: settings.shop_description || 'Premium car accessories with WhatsApp ordering.',
+    name: settings.shop_name || cms.hero.title,
+    description: settings.shop_description || cms.hero.description,
     telephone: settings.whatsapp_number || '',
-  }), [settings]);
+  }), [settings, cms.hero.description, cms.hero.title]);
 
   useEffect(() => {
     Promise.all([
@@ -116,18 +84,6 @@ export default function HomePage() {
           });
         });
 
-        if (categoryTrackRef.current) {
-          gsap.to(categoryTrackRef.current, {
-            xPercent: -35,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: categoryTrackRef.current,
-              start: 'top 80%',
-              end: 'bottom top',
-              scrub: 1,
-            },
-          });
-        }
       });
     }
 
@@ -142,22 +98,26 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-white text-[#111111]">
       <SEO
-        title="AutoLux Accessories"
-        description="Premium scroll-animation car accessories storefront with WhatsApp checkout."
+        title={cms.hero.title}
+        description={cms.hero.description}
         jsonLd={storeJsonLd}
       />
       <Navbar />
 
       <main className="flex-1">
-        <CinematicCarStory />
-        <StoryIntro whatsappHref={whatsappHref} />
-        <CategoryShowcase categories={displayCategories} trackRef={categoryTrackRef} />
-        <QualitySection />
-        <ProductCollection loading={loading} products={bestSellers.length ? bestSellers : featuredProducts} />
-        <ScrollStory storyRef={storyRef} />
-        <WhatsAppCheckout whatsappHref={whatsappHref} />
-        <Testimonials />
-        <ContactCTA whatsappHref={whatsappHref} />
+        <CinematicCarStory hero={cms.hero} />
+        <StoryIntro whatsappHref={whatsappHref} story={cms.story} />
+        <CategoryShowcase categories={displayCategories} section={cms.categorySection} trackRef={categoryTrackRef} />
+        <QualitySection features={cms.features} section={cms.featuresSection} />
+        <ProductCollection
+          loading={loading}
+          products={bestSellers.length ? bestSellers : featuredProducts}
+          section={cms.productSections}
+        />
+        <ScrollStory storyRef={storyRef} items={cms.installShowcase} label={cms.installLabel} />
+        <WhatsAppCheckout whatsappHref={whatsappHref} cta={cms.cta} steps={cms.checkoutSteps} />
+        <Testimonials testimonials={cms.testimonials} section={cms.testimonialsSection} />
+        <ContactCTA whatsappHref={whatsappHref} cta={cms.cta} />
       </main>
 
       <Footer />
@@ -165,7 +125,7 @@ export default function HomePage() {
   );
 }
 
-function CinematicCarStory() {
+function CinematicCarStory({ hero }) {
   const sceneRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: sceneRef,
@@ -183,13 +143,13 @@ function CinematicCarStory() {
         <motion.div style={{ opacity: glowOpacity }} className="absolute left-1/2 top-[58%] h-[46vw] max-h-[520px] w-[84vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#8DFF2F] blur-[90px]" />
 
         <motion.div style={{ opacity: introOpacity, y: introY }} className="absolute inset-x-0 top-[8vh] z-20 px-4 text-center pointer-events-none">
-          <p className="section-label">AutoLux Accessories</p>
+          <p className="section-label">{hero.label}</p>
           <h1 className="mx-auto max-w-6xl text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-[0.9]">
-            Redefine Your Drive
+            {hero.title}
           </h1>
           <div className="mt-5 flex flex-col sm:flex-row justify-center gap-3 pointer-events-auto">
-            <Link href="/shop" className="btn-primary px-8 py-4">Shop Accessories <ArrowRight className="w-4 h-4" /></Link>
-            <a href="#collection" className="btn-outline px-8 py-4">Explore Collection</a>
+            <Link href="/shop" className="btn-primary px-8 py-4">{hero.primaryCta} <ArrowRight className="w-4 h-4" /></Link>
+            <a href="#collection" className="btn-outline px-8 py-4">{hero.secondaryCta}</a>
           </div>
         </motion.div>
 
@@ -515,15 +475,15 @@ function EngineAnimation() {
   );
 }
 
-function StoryIntro({ whatsappHref }) {
+function StoryIntro({ whatsappHref, story }) {
   return (
     <section className="bg-[#F5F7F8] py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
         <div className="reveal-copy">
-          <p className="section-label">Built for drivers</p>
-          <h2 className="section-title">Built for drivers who expect more.</h2>
+          <p className="section-label">{story.label}</p>
+          <h2 className="section-title">{story.title}</h2>
           <p className="mt-6 text-zinc-600 leading-8">
-            From interior comfort to exterior protection, every accessory is selected to improve your driving experience with premium quality and modern design.
+            {story.description}
           </p>
           <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn-dark mt-8">
             <MessageCircle className="w-4 h-4" /> Talk to a specialist
@@ -538,8 +498,8 @@ function StoryIntro({ whatsappHref }) {
           />
           <div className="absolute inset-0 bg-gradient-to-tr from-black/35 via-transparent to-white/15" />
           <div className="absolute top-6 right-6 glass p-4 max-w-[220px]">
-            <p className="text-sm font-bold">OEM-plus styling</p>
-            <p className="text-xs text-zinc-500 mt-1">Clean upgrades that feel integrated, not added on.</p>
+            <p className="text-sm font-bold">{story.cards?.[0]?.title}</p>
+            <p className="text-xs text-zinc-500 mt-1">{story.cards?.[0]?.text}</p>
           </div>
         </div>
       </div>
@@ -547,57 +507,129 @@ function StoryIntro({ whatsappHref }) {
   );
 }
 
-function CategoryShowcase({ categories, trackRef }) {
+function CategoryShowcase({ categories, section, trackRef }) {
+  const cardStep = 304;
+  const [cursor, setCursor] = useState(categories.length);
+  const [animateLoop, setAnimateLoop] = useState(true);
+  const loopCategories = categories.length ? [...categories, ...categories, ...categories] : [];
+  const { scrollYProgress } = useScroll({
+    target: trackRef,
+    offset: ['start end', 'end start'],
+  });
+  const scrollDrift = useTransform(scrollYProgress, [0, 1], [cardStep * 0.45, -cardStep * 0.45]);
+
+  useEffect(() => {
+    setAnimateLoop(false);
+    setCursor(categories.length);
+    const frame = requestAnimationFrame(() => setAnimateLoop(true));
+    return () => cancelAnimationFrame(frame);
+  }, [categories.length]);
+
+  const move = (direction) => {
+    if (!categories.length) return;
+    setAnimateLoop(true);
+    setCursor((current) => current + direction);
+  };
+
+  const handleLoopComplete = () => {
+    if (!categories.length) return;
+    if (cursor >= categories.length * 2) {
+      setAnimateLoop(false);
+      setCursor(categories.length);
+      requestAnimationFrame(() => setAnimateLoop(true));
+    }
+    if (cursor < categories.length) {
+      setAnimateLoop(false);
+      setCursor(categories.length * 2 - 1);
+      requestAnimationFrame(() => setAnimateLoop(true));
+    }
+  };
+
   return (
-    <section className="bg-white py-20 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-        <p className="section-label">Collection</p>
-        <h2 className="section-title">Choose your upgrade path.</h2>
-      </div>
-      <div ref={trackRef} className="flex gap-4 px-4 sm:px-6 lg:px-8 min-w-max">
-        {categories.map((category, index) => {
-          const name = typeof category === 'string' ? category : category.name;
-          const imageUrl = typeof category === 'string' ? null : category.image_url;
-          return (
-          <Link
-            key={`${name}-${index}`}
-            href={`/shop?search=${encodeURIComponent(name)}`}
-            className="group relative w-72 h-72 rounded-[28px] bg-[#111111] border border-[#E5E7EB] overflow-hidden p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:border-[#8DFF2F] hover:shadow-card-hover"
+    <section ref={trackRef} className="bg-white py-20 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="section-label">{section.label}</p>
+          <h2 className="section-title">{section.title}</h2>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => move(-1)}
+            className="w-11 h-11 rounded-full border border-[#E5E7EB] bg-white text-[#111111] shadow-sm transition-all hover:border-[#8DFF2F] hover:bg-[#8DFF2F]/15"
+            aria-label="Previous category"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={imageUrl || getCategoryImage(name)}
-              alt={`${name} category`}
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-            <span className="absolute inset-0 bg-gradient-to-t from-[#111111]/88 via-[#111111]/35 to-transparent" />
-            <span className="relative text-6xl font-display font-bold text-white/18">{String(index + 1).padStart(2, '0')}</span>
-            <span className="relative">
-              <span className="block text-2xl font-display font-bold text-white drop-shadow-sm">{name}</span>
-              <span className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-[#8DFF2F]">Explore <ChevronRight className="w-4 h-4" /></span>
-            </span>
-          </Link>
-          );
-        })}
+            <ChevronLeft className="mx-auto w-5 h-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => move(1)}
+            className="w-11 h-11 rounded-full border border-[#E5E7EB] bg-[#111111] text-white shadow-sm transition-all hover:border-[#8DFF2F] hover:bg-[#8DFF2F] hover:text-[#111111]"
+            aria-label="Next category"
+          >
+            <ChevronRight className="mx-auto w-5 h-5" />
+          </button>
+        </div>
+      </div>
+      <div className="relative">
+        <motion.div
+          style={{ x: scrollDrift }}
+          className="min-w-max"
+        >
+          <motion.div
+            className="flex gap-4 px-4 sm:px-6 lg:px-8 min-w-max"
+            animate={{ x: -cursor * cardStep }}
+            transition={animateLoop ? { type: 'spring', stiffness: 150, damping: 28 } : { duration: 0 }}
+            onAnimationComplete={handleLoopComplete}
+          >
+            {loopCategories.map((category, index) => {
+              const name = typeof category === 'string' ? category : category.name;
+              const imageUrl = typeof category === 'string' ? null : category.image_url;
+              const displayIndex = (index % categories.length) + 1;
+              return (
+                <Link
+                  key={`${name}-${index}`}
+                  href={`/shop?search=${encodeURIComponent(name)}`}
+                  className="group relative w-72 h-72 flex-shrink-0 rounded-[28px] bg-[#111111] border border-[#E5E7EB] overflow-hidden p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:border-[#8DFF2F] hover:shadow-card-hover"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={imageUrl || getCategoryImage(name)}
+                    alt={`${name} category`}
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <span className="absolute inset-0 bg-gradient-to-t from-[#111111]/88 via-[#111111]/35 to-transparent" />
+                  <span className="relative text-6xl font-display font-bold text-white/18">{String(displayIndex).padStart(2, '0')}</span>
+                  <span className="relative">
+                    <span className="block text-2xl font-display font-bold text-white drop-shadow-sm">{name}</span>
+                    <span className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-[#8DFF2F]">Explore <ChevronRight className="w-4 h-4" /></span>
+                  </span>
+                </Link>
+              );
+            })}
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
 }
 
 
-function QualitySection() {
+function QualitySection({ features, section }) {
   return (
     <section className="bg-[#F5F7F8] py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[0.8fr_1.2fr] gap-12">
         <div className="lg:sticky lg:top-28 h-max reveal-copy">
-          <p className="section-label">Quality</p>
-          <h2 className="section-title">Premium quality from inside out.</h2>
+          <p className="section-label">{section.label}</p>
+          <h2 className="section-title">{section.title}</h2>
           <p className="mt-6 text-zinc-600 leading-8">
-            Every detail is chosen for daily usability, long-term finish, and that quietly expensive automotive feel.
+            {section.description}
           </p>
         </div>
         <div className="grid sm:grid-cols-2 gap-4">
-          {qualityCards.map(({ title, text, icon: Icon }, index) => (
+          {features.map(({ title, text }, index) => {
+            const Icon = qualityIcons[index % qualityIcons.length];
+            return (
             <motion.div
               key={title}
               initial={{ opacity: 0, y: 28 }}
@@ -610,21 +642,22 @@ function QualitySection() {
               <h3 className="text-xl font-bold text-[#111111]">{title}</h3>
               <p className="mt-3 text-sm text-zinc-600 leading-7">{text}</p>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
 
-function ProductCollection({ loading, products }) {
+function ProductCollection({ loading, products, section }) {
   return (
     <section id="collection" className="bg-white py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12 reveal-copy">
           <div>
-            <p className="section-label">Products</p>
-            <h2 className="section-title">Accessories That Match Your Drive</h2>
+            <p className="section-label">{section.bestSellersLabel}</p>
+            <h2 className="section-title">{section.bestSellersTitle}</h2>
           </div>
           <Link href="/shop" className="inline-flex items-center gap-1 text-sm font-bold text-[#00A83D] hover:text-[#111111] uppercase">
             View all <ChevronRight className="w-4 h-4" />
@@ -640,7 +673,7 @@ function ProductCollection({ loading, products }) {
   );
 }
 
-function ScrollStory({ storyRef }) {
+function ScrollStory({ storyRef, items, label }) {
   return (
     <section ref={storyRef} className="bg-[#111111] text-white py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[1fr_1fr] gap-12">
@@ -657,13 +690,28 @@ function ScrollStory({ storyRef }) {
           </div>
         </div>
         <div className="space-y-28 py-8">
-          {storySteps.map((step, index) => (
+          {items.map((step, index) => (
             <div key={step.title} className="min-h-[360px] reveal-copy">
-              <p className="text-[#8DFF2F] text-sm font-bold uppercase tracking-[0.18em]">Step {index + 1}</p>
-              <h2 className="mt-4 text-4xl md:text-6xl font-display font-bold leading-tight">{step.title}</h2>
-              <p className="mt-6 text-white/65 leading-8 max-w-xl">{step.text}</p>
-              <div className="mt-6 flex flex-wrap gap-2">
-                {step.items.map((item) => <span key={item} className="rounded-full border border-white/15 px-4 py-2 text-sm text-white/75">{item}</span>)}
+              <p className="text-[#8DFF2F] text-sm font-bold uppercase tracking-[0.18em]">{label} {index + 1}</p>
+              <h2 className="mt-4 text-4xl md:text-6xl font-display font-bold leading-tight text-white">{step.title}</h2>
+              <p className="mt-6 text-white/68 leading-8 max-w-xl">{step.text}</p>
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                {(step.details || []).map((detail, detailIndex) => (
+                  <div
+                    key={detail.title}
+                    className="group relative overflow-hidden rounded-lg border border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.105),rgba(255,255,255,0.035))] p-5 shadow-[0_18px_48px_rgba(0,0,0,0.18)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#8DFF2F]/55 hover:bg-white/[0.09]"
+                  >
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#8DFF2F]/55 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="mb-4 flex items-center justify-between gap-3">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#8DFF2F] text-xs font-extrabold text-[#111111] shadow-[0_0_24px_rgba(141,255,47,0.26)]">
+                        {String(detailIndex + 1).padStart(2, '0')}
+                      </span>
+                      <span className="h-px flex-1 bg-white/10" />
+                    </div>
+                    <p className="text-base font-extrabold text-white">{detail.title}</p>
+                    <p className="mt-3 text-sm leading-6 text-white/62">{detail.text}</p>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
@@ -673,27 +721,27 @@ function ScrollStory({ storyRef }) {
   );
 }
 
-function WhatsAppCheckout({ whatsappHref }) {
+function WhatsAppCheckout({ whatsappHref, cta, steps }) {
   return (
     <section className="bg-[#F5F7F8] py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[0.95fr_1.05fr] gap-12 items-center">
         <div className="reveal-copy">
-          <p className="section-label">WhatsApp checkout</p>
-          <h2 className="section-title">Simple Checkout. Direct on WhatsApp.</h2>
+          <p className="section-label">{cta.eyebrow}</p>
+          <h2 className="section-title">{cta.title}</h2>
           <p className="mt-6 text-zinc-600 leading-8">
-            Cart, address, order summary, and message generation are built for direct confirmation with your customer.
+            {cta.description}
           </p>
           <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn-primary mt-8 animate-pulse">
-            <MessageCircle className="w-4 h-4" /> Start WhatsApp Order
+            <MessageCircle className="w-4 h-4" /> {cta.button}
           </a>
         </div>
         <div className="card p-6 reveal-copy">
-          {['Cart', 'Address', 'Order Summary', 'WhatsApp Message'].map((item, index) => (
-            <div key={item} className="flex items-center gap-4 py-4 border-b border-[#E5E7EB] last:border-0">
+          {steps.map((item, index) => (
+            <div key={item.title} className="flex items-center gap-4 py-4 border-b border-[#E5E7EB] last:border-0">
               <span className="w-10 h-10 rounded-full bg-[#8DFF2F] text-[#111111] flex items-center justify-center font-bold">{index + 1}</span>
               <div>
-                <p className="font-bold text-[#111111]">{item}</p>
-                <p className="text-sm text-zinc-500">Customer details, product names, quantities, and total amount stay in the message.</p>
+                <p className="font-bold text-[#111111]">{item.title}</p>
+                <p className="text-sm text-zinc-500">{item.text}</p>
               </div>
               <CheckCircle2 className="w-5 h-5 text-[#00A83D] ml-auto hidden sm:block" />
             </div>
@@ -704,12 +752,12 @@ function WhatsAppCheckout({ whatsappHref }) {
   );
 }
 
-function Testimonials() {
+function Testimonials({ testimonials, section }) {
   return (
     <section className="bg-white py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <p className="section-label">Reviews</p>
-        <h2 className="section-title">Trusted by car lovers</h2>
+        <p className="section-label">{section.label}</p>
+        <h2 className="section-title">{section.title}</h2>
         <div className="mt-12 flex gap-4">
           {testimonials.map((item) => (
             <motion.div
@@ -728,25 +776,47 @@ function Testimonials() {
   );
 }
 
-function ContactCTA({ whatsappHref }) {
+function ContactCTA({ whatsappHref, cta }) {
+  const eyebrow = cta.eyebrow?.trim() || 'Order via WhatsApp';
+  const title = cta.title?.trim() || 'Ready to upgrade your drive?';
+  const description = cta.description?.trim() || 'Send us your vehicle details and cart. We will confirm compatibility, availability, and delivery.';
+  const button = cta.button?.trim() || 'Start WhatsApp Order';
+
   return (
-    <section className="bg-[#111111] text-white py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[0.9fr_1.1fr] gap-12">
-        <div className="reveal-copy">
-          <p className="text-[#8DFF2F] text-sm font-bold uppercase tracking-[0.18em] mb-3">Contact</p>
-          <h2 className="text-5xl md:text-7xl font-display font-bold leading-[0.95]">Let's upgrade your ride.</h2>
-          <p className="mt-6 text-white/60 leading-8 max-w-lg">
-            Share your vehicle model and the kind of upgrade you want. The team can guide you directly on WhatsApp.
+    <section className="relative overflow-hidden bg-[#111111] text-white py-24">
+      <div className="absolute inset-0 surface-grid opacity-10" />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[0.88fr_1.12fr] gap-12 items-center">
+        <div className="reveal-copy max-w-xl">
+          <p className="text-[#8DFF2F] text-sm font-bold uppercase tracking-[0.18em] mb-4">{eyebrow}</p>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-extrabold leading-tight text-white">
+            {title}
+          </h2>
+          <p className="mt-6 text-base text-white/72 leading-8">
+            {description}
           </p>
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            {['Compatibility check', 'Stock confirmation', 'Delivery guidance'].map((item) => (
+              <div key={item} className="border border-white/10 bg-white/5 px-4 py-3">
+                <CheckCircle2 className="w-4 h-4 text-[#8DFF2F] mb-2" />
+                <p className="text-xs font-semibold text-white/82 leading-5">{item}</p>
+              </div>
+            ))}
+          </div>
         </div>
-        <form className="glass p-6 space-y-4 text-[#111111]" onSubmit={(e) => e.preventDefault()}>
-          <input className="input-field" placeholder="Name" />
-          <input className="input-field" placeholder="Phone" />
+        <form
+          className="reveal-copy border border-white/12 bg-white/[0.06] p-5 sm:p-8 space-y-4 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <div className="grid sm:grid-cols-2 gap-4">
+            <input className="input-field" placeholder="Name" />
+            <input className="input-field" placeholder="Phone" />
+          </div>
           <input className="input-field" placeholder="Vehicle model" />
-          <textarea className="input-field resize-none" rows={4} placeholder="Requirement" />
+          <textarea className="input-field resize-none min-h-32" rows={4} placeholder="Requirement" />
           <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn-primary w-full">
-            <MessageCircle className="w-4 h-4" /> Send on WhatsApp
+            <MessageCircle className="w-4 h-4" /> {button}
           </a>
+          <p className="text-center text-xs text-white/45">Your details open as a ready-to-send WhatsApp message.</p>
         </form>
       </div>
     </section>
@@ -768,5 +838,6 @@ function SkeletonCard() {
 
 export async function getServerSideProps() {
   const initialSettings = await getSettingsFromDb();
-  return { props: { initialSettings } };
+  const cmsContent = parseCmsContent(initialSettings);
+  return { props: { initialSettings, cmsContent } };
 }

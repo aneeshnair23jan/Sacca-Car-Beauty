@@ -1,10 +1,8 @@
-import fs from 'fs';
-import path from 'path';
 import mongoose from 'mongoose';
 import { connectDb, Product } from '@/lib/db';
 import { requireAuth } from '@/lib/auth';
 import { isMultipartRequest, readJsonRequestBody } from '@/lib/apiRequest';
-import { upload, runMiddleware } from '@/lib/upload';
+import { upload, runMiddleware, uploadFilesToStorage, deleteStoredFile, getStoredFileUrl } from '@/lib/upload';
 import { parseIdList, parseJsonArray, serializeProduct } from './index';
 
 export const config = { api: { bodyParser: false } };
@@ -30,7 +28,7 @@ export default async function handler(req, res) {
       serialized.images = (product.images || []).map((img) => ({
         ...img,
         id: img._id?.toString(),
-        url: `/uploads/${img.filename}`,
+        url: getStoredFileUrl(img.filename),
       }));
 
       return res.json(serialized);
@@ -86,9 +84,10 @@ export default async function handler(req, res) {
       // Append new uploaded images
       if (req.files?.length > 0) {
         const hasPrimary = existing.images.some((i) => i.is_primary);
-        req.files.forEach((f, i) => {
+        const storedImages = await uploadFilesToStorage(req.files);
+        storedImages.forEach((image, i) => {
           existing.images.push({
-            filename: f.filename,
+            filename: image.filename,
             is_primary: !hasPrimary && i === 0,
             sort_order: existing.images.length + i,
           });
@@ -105,7 +104,7 @@ export default async function handler(req, res) {
       serialized.images = (updated.images || []).map((img) => ({
         ...img,
         id: img._id?.toString(),
-        url: `/uploads/${img.filename}`,
+        url: getStoredFileUrl(img.filename),
       }));
 
       return res.json(serialized);
@@ -122,11 +121,8 @@ export default async function handler(req, res) {
       const product = await Product.findById(id);
       if (!product) return res.status(404).json({ error: 'Product not found' });
 
-      // Delete image files from disk
-      product.images.forEach((img) => {
-        const filePath = path.join(process.cwd(), 'public', 'uploads', img.filename);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-      });
+      // Delete product image objects from the configured storage backend.
+      await Promise.all(product.images.map((img) => deleteStoredFile(img.filename)));
 
       await product.deleteOne();
       return res.json({ message: 'Product deleted successfully' });

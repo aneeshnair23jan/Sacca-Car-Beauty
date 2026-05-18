@@ -8,9 +8,13 @@
   body {
     @apply font-sans text-[#1C1C1C] bg-[#F5F7F8] antialiased;
     overflow-x: hidden;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
-  h1, h2, h3 {
-    @apply font-display;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold text-[#111111];
+    line-height: 1.08;
   }
   ::selection {
     @apply bg-[#8DFF2F] text-[#111111];
@@ -19,46 +23,46 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 bg-[#8DFF2F] hover:bg-[#74D61C] active:bg-[#63BE12] text-[#111111] font-bold text-sm px-6 py-3 rounded-xl transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#8DFF2F]/25;
+    @apply inline-flex items-center justify-center gap-2 bg-[#8DFF2F] hover:bg-[#74D61C] active:bg-[#63BE12] text-[#111111] font-bold text-sm px-6 py-4 rounded-lg transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#8DFF2F]/25;
   }
 
   .btn-dark {
-    @apply inline-flex items-center justify-center gap-2 bg-[#111111] hover:bg-black-950 border border-[#111111] text-white font-semibold text-sm px-6 py-3 rounded-xl transition-all duration-300 hover:-translate-y-0.5;
+    @apply inline-flex items-center justify-center gap-2 bg-[#111111] hover:bg-black-950 border border-[#111111] text-white font-semibold text-sm px-6 py-4 rounded-lg transition-all duration-300 hover:-translate-y-0.5;
   }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 border border-[#111111] text-[#111111] hover:bg-[#111111] hover:text-white font-semibold text-sm px-6 py-3 rounded-xl transition-all duration-300 hover:-translate-y-0.5;
+    @apply inline-flex items-center justify-center gap-2 border border-[#111111] text-[#111111] hover:bg-[#111111] hover:text-white font-semibold text-sm px-6 py-4 rounded-lg transition-all duration-300 hover:-translate-y-0.5;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 bg-white hover:bg-[#F7F8FA] text-[#111111] font-semibold text-sm px-6 py-3 rounded-xl border border-[#E5E7EB] transition-all duration-300 hover:border-[#111111];
+    @apply inline-flex items-center justify-center gap-2 bg-white hover:bg-[#F7F8FA] text-[#111111] font-semibold text-sm px-6 py-4 rounded-lg border border-[#E5E7EB] transition-all duration-300 hover:border-[#111111];
   }
 
   .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm px-6 py-3 rounded-xl transition-all duration-300;
+    @apply inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm px-6 py-4 rounded-lg transition-all duration-300;
   }
 
   .input-field {
-    @apply w-full border border-[#E5E7EB] bg-white px-4 py-3 text-sm text-[#111111] rounded-xl focus:outline-none focus:border-[#8DFF2F] focus:ring-2 focus:ring-[#8DFF2F]/25 placeholder:text-zinc-400 transition-colors duration-200;
+    @apply w-full border border-[#E5E7EB] bg-white px-4 py-4 text-sm text-[#111111] rounded-lg focus:outline-none focus:border-[#8DFF2F] focus:ring-2 focus:ring-[#8DFF2F]/25 placeholder:text-zinc-400 transition-colors duration-200;
   }
 
   .card {
-    @apply bg-white border border-[#E5E7EB] rounded-2xl;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    @apply bg-white border border-[#E5E7EB] rounded-lg;
+    box-shadow: 0 16px 40px rgba(17,17,17,0.06);
   }
 
   .card-dark {
-    @apply bg-white border border-[#E5E7EB] rounded-2xl;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    @apply bg-white border border-[#E5E7EB] rounded-lg;
+    box-shadow: 0 16px 40px rgba(17,17,17,0.06);
   }
 
   .glass {
-    @apply bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    @apply bg-white/70 backdrop-blur-xl border border-white/80 rounded-lg;
+    box-shadow: 0 16px 40px rgba(17,17,17,0.06);
   }
 
   .section-label {
-    @apply text-xs font-bold uppercase tracking-[0.18em] text-[#00A83D] mb-3;
+    @apply text-xs font-bold uppercase tracking-[0.18em] text-[#00A83D] mb-4;
   }
 
   .section-title {
@@ -66,7 +70,7 @@
   }
 
   .accent-divider {
-    @apply w-16 h-1 bg-[#8DFF2F] my-6 rounded-full;
+    @apply w-16 h-1 bg-[#8DFF2F] my-8 rounded-full;
   }
 
   .surface-grid {
@@ -131,6 +135,118 @@
 
   .brand-glow {
     box-shadow: 0 18px 60px rgba(141,255,47,0.34);
+  }
+
+  .admin-shell .btn-primary,
+  .admin-shell .btn-secondary,
+  .admin-shell .btn-danger,
+  .admin-shell .btn-dark,
+  .admin-shell .btn-outline {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    line-height: 1.1rem;
+  }
+
+  .admin-shell .input-field {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    line-height: 1.2rem;
+  }
+
+  .admin-shell .card {
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 24px rgba(17,17,17,0.045);
+  }
+
+  .admin-shell h1 {
+    font-size: 1.45rem;
+    line-height: 1.85rem;
+  }
+
+  .admin-shell h2,
+  .admin-shell h3 {
+    font-size: 0.95rem;
+    line-height: 1.35rem;
+  }
+
+  .admin-shell table {
+    font-size: 0.8125rem;
+  }
+
+  .admin-shell th {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .admin-shell td {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .admin-shell .h-\[84px\],
+  .admin-shell .h-\[76px\] {
+    height: 4.25rem;
+  }
+
+  .admin-shell .w-14,
+  .admin-shell .h-14 {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .admin-shell .w-12 {
+    width: 2.75rem;
+  }
+
+  .admin-shell .h-12 {
+    height: 2.75rem;
+  }
+
+  .admin-shell input.h-12,
+  .admin-shell select.h-12 {
+    height: 2.5rem;
+  }
+
+  .admin-shell .admin-search-input {
+    padding-left: 2.75rem;
+    padding-right: 2.75rem;
+  }
+
+  .admin-shell .text-3xl {
+    font-size: 1.65rem;
+    line-height: 2rem;
+  }
+
+  .admin-shell .text-2xl {
+    font-size: 1.25rem;
+    line-height: 1.65rem;
+  }
+
+  .admin-shell .text-base {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .admin-shell .p-6 {
+    padding: 1rem;
+  }
+
+  .admin-shell .p-5 {
+    padding: 1rem;
+  }
+
+  .admin-shell .p-4 {
+    padding: 0.875rem;
+  }
+
+  .admin-shell .mb-6 {
+    margin-bottom: 1rem;
+  }
+
+  .admin-shell .gap-6 {
+    gap: 1rem;
   }
 }
 
@@ -566,7 +682,7 @@
 }
 
 .cinema-callout p {
-  font-family: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  font-family: Poppins, Inter, Aptos, "Helvetica Neue", Arial, ui-sans-serif, system-ui, sans-serif;
   font-weight: 700;
   color: #111111;
   line-height: 1.1;

@@ -6,6 +6,8 @@ import { defaultCmsContent } from '@/lib/cmsDefaults';
 const MONGODB_URI = process.env.MONGODB_URI;
 if (!MONGODB_URI) throw new Error('Please define MONGODB_URI in .env.local');
 
+const CATEGORY_SEED_KEY = 'categories_seeded';
+
 // ── Connection cache (reused across hot-reloads in dev) ──────────────────────
 let cached = global._mongoose;
 if (!cached) cached = global._mongoose = { conn: null, promise: null };
@@ -155,7 +157,34 @@ async function seedDefaults() {
     await Setting.updateOne({ key: s.key }, { $setOnInsert: s }, { upsert: true });
   }
 
-  // Categories
+  await seedCategoriesOnce();
+
+  await seedProductsIfEmpty();
+
+  // Admin user
+  const exists = await AdminUser.findOne();
+  if (!exists) {
+    const username = process.env.ADMIN_USERNAME || 'admin';
+    const password = process.env.ADMIN_PASSWORD || 'admin123';
+    const password_hash = await bcrypt.hash(password, 10);
+    await AdminUser.create({ username, password_hash });
+  }
+}
+
+async function seedCategoriesOnce() {
+  const categorySeed = await Setting.findOne({ key: CATEGORY_SEED_KEY }).lean();
+  if (categorySeed?.value === 'true') return;
+
+  const existingCategoryCount = await Category.countDocuments();
+  if (existingCategoryCount > 0) {
+    await Setting.updateOne(
+      { key: CATEGORY_SEED_KEY },
+      { $set: { key: CATEGORY_SEED_KEY, value: 'true' } },
+      { upsert: true }
+    );
+    return;
+  }
+
   const defaultCategories = [
     'Car Care',
     'Interior',
@@ -171,20 +200,13 @@ async function seedDefaults() {
     'Mobile Holders',
     'Steering Covers',
   ];
-  for (const name of defaultCategories) {
-    await Category.updateOne({ name }, { $setOnInsert: { name } }, { upsert: true });
-  }
 
-  await seedProductsIfEmpty();
-
-  // Admin user
-  const exists = await AdminUser.findOne();
-  if (!exists) {
-    const username = process.env.ADMIN_USERNAME || 'admin';
-    const password = process.env.ADMIN_PASSWORD || 'admin123';
-    const password_hash = await bcrypt.hash(password, 10);
-    await AdminUser.create({ username, password_hash });
-  }
+  await Category.insertMany(defaultCategories.map((name) => ({ name })), { ordered: false });
+  await Setting.updateOne(
+    { key: CATEGORY_SEED_KEY },
+    { $set: { key: CATEGORY_SEED_KEY, value: 'true' } },
+    { upsert: true }
+  );
 }
 
 async function seedProductsIfEmpty() {

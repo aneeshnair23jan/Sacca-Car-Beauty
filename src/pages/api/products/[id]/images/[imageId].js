@@ -1,8 +1,7 @@
-import fs from 'fs';
-import path from 'path';
 import mongoose from 'mongoose';
 import { connectDb, Product } from '@/lib/db';
 import { requireAuth } from '@/lib/auth';
+import { deleteStoredFile } from '@/lib/upload';
 
 export default async function handler(req, res) {
   const { id, imageId } = req.query;
@@ -23,9 +22,7 @@ export default async function handler(req, res) {
     const image = product.images.id(imageId);
     if (!image) return res.status(404).json({ error: 'Image not found' });
 
-    // Delete file from disk
-    const filePath = path.join(process.cwd(), 'public', 'uploads', image.filename);
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    await deleteStoredFile(image.filename);
 
     const wasPrimary = image.is_primary;
     image.deleteOne();

@@ -54,13 +54,13 @@ export default function Navbar() {
         {cms.global.announcement}
       </div>
 
-      <nav className={`sticky top-0 z-50 border-b transition-all duration-300 ${
-        scrolled ? 'bg-white/92 backdrop-blur-xl border-[#E5E7EB] shadow-sm' : 'bg-[#F5F7F8]/95 border-transparent'
-      }`}>
+      <nav className="sticky top-0 z-50 bg-transparent py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="h-16 flex items-center justify-between gap-4">
+          <div className={`h-[76px] flex items-center justify-between gap-4 rounded-2xl border border-[#E5E7EB] bg-white px-4 sm:px-6 transition-all duration-300 ${
+            scrolled ? 'shadow-[0_18px_60px_rgba(17,17,17,0.18)]' : 'shadow-[0_18px_60px_rgba(17,17,17,0.12)]'
+          }`}>
             <Link href="/" className="flex items-center gap-3 min-w-0">
-              <span className="w-10 h-10 rounded-md bg-[#8DFF2F] text-[#111111] flex items-center justify-center brand-glow">
+              <span className="w-10 h-10 rounded-lg bg-[#111111] text-[#8DFF2F] flex items-center justify-center">
                 <Car className="w-5 h-5" />
               </span>
               <span className="min-w-0">
@@ -73,15 +73,15 @@ export default function Navbar() {
               </span>
             </Link>
 
-            <div className="hidden lg:flex items-center gap-1">
+            <div className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-3 py-2 rounded-md text-sm font-semibold transition-colors ${
+                  className={`text-sm font-semibold transition-colors ${
                     isActive(link.href)
-                      ? 'text-[#111111] bg-[#8DFF2F]/25'
-                      : 'text-zinc-600 hover:text-[#111111] hover:bg-white'
+                      ? 'text-[#74D61C]'
+                      : 'text-zinc-600 hover:text-[#111111]'
                   }`}
                 >
                   {link.label}
@@ -89,27 +89,27 @@ export default function Navbar() {
               ))}
             </div>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 lg:border-l lg:border-[#E5E7EB] lg:pl-6">
               <IconButton onClick={() => setSearchOpen((v) => !v)} label="Search">
                 <Search className="w-5 h-5" />
               </IconButton>
-              <Link href="/wishlist" className="relative w-10 h-10 rounded-md flex items-center justify-center text-zinc-600 hover:text-[#111111] hover:bg-white transition-colors" aria-label="Wishlist">
+              <Link href="/wishlist" className="relative w-10 h-10 rounded-full flex items-center justify-center text-zinc-500 hover:text-[#111111] hover:bg-[#F5F7F8] transition-colors" aria-label="Wishlist">
                 <Heart className="w-5 h-5" />
                 {wishlist.length > 0 && <Badge value={wishlist.length} />}
               </Link>
-              <Link href="/cart" className="relative w-10 h-10 rounded-md flex items-center justify-center text-zinc-600 hover:text-[#111111] hover:bg-white transition-colors" aria-label="Cart">
+              <Link href="/cart" className="relative w-10 h-10 rounded-full flex items-center justify-center text-zinc-500 hover:text-[#111111] hover:bg-[#F5F7F8] transition-colors" aria-label="Cart">
                 <ShoppingCart className="w-5 h-5" />
                 {cartCount > 0 && <Badge value={cartCount} />}
               </Link>
-              <Link href="/account" className="hidden sm:flex w-10 h-10 rounded-md items-center justify-center text-zinc-600 hover:text-[#111111] hover:bg-white transition-colors" aria-label="Account">
+              <Link href="/account" className="hidden sm:flex w-10 h-10 rounded-full items-center justify-center text-zinc-500 hover:text-[#111111] hover:bg-[#F5F7F8] transition-colors" aria-label="Account">
                 <User className="w-5 h-5" />
               </Link>
-              <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="hidden md:inline-flex btn-primary py-2.5 px-4">
+              <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="hidden md:inline-flex items-center justify-center gap-2 rounded-lg bg-[#8DFF2F] px-6 py-3 text-sm font-extrabold text-[#111111] transition-all hover:-translate-y-0.5 hover:bg-[#74D61C] hover:shadow-[0_14px_34px_rgba(141,255,47,0.28)]">
                 <MessageCircle className="w-4 h-4" /> WhatsApp
               </a>
               <button
                 onClick={() => setMenuOpen((v) => !v)}
-                className="lg:hidden w-10 h-10 rounded-md flex items-center justify-center text-zinc-600 hover:text-[#111111] hover:bg-white transition-colors"
+                className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center text-zinc-500 hover:text-[#111111] hover:bg-[#F5F7F8] transition-colors"
                 aria-label="Menu"
               >
                 {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -124,18 +124,18 @@ export default function Navbar() {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden border-t border-[#E5E7EB] bg-white"
+              className="overflow-hidden"
             >
-              <form onSubmit={handleSearch} className="max-w-2xl mx-auto flex gap-2 px-4 py-4">
+              <form onSubmit={handleSearch} className="max-w-2xl mx-auto flex gap-2 px-4 pt-3">
                 <input
                   type="text"
                   placeholder="Search mats, ambient lights, organizers..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   autoFocus
-                  className="input-field"
+                  className="w-full rounded-2xl border border-[#E5E7EB] bg-white px-5 py-4 text-sm text-[#111111] placeholder:text-zinc-400 shadow-[0_14px_40px_rgba(17,17,17,0.08)] focus:outline-none focus:border-[#8DFF2F] focus:ring-2 focus:ring-[#8DFF2F]/20"
                 />
-                <button type="submit" className="btn-primary px-4">
+                <button type="submit" className="rounded-2xl bg-[#8DFF2F] px-5 text-[#111111]">
                   <Search className="w-4 h-4" />
                 </button>
               </form>
@@ -149,22 +149,22 @@ export default function Navbar() {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="lg:hidden overflow-hidden border-t border-[#E5E7EB] bg-white px-4 py-4"
+              className="lg:hidden overflow-hidden px-4 pt-3"
             >
-              <div className="space-y-1">
+              <div className="rounded-2xl border border-[#E5E7EB] bg-white p-3 shadow-[0_18px_60px_rgba(17,17,17,0.12)]">
                 {[...navLinks, { href: '/account', label: 'Account' }].map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className={`block px-3 py-3 rounded-md text-sm font-semibold ${
-                      isActive(link.href) ? 'text-[#111111] bg-[#8DFF2F]/25' : 'text-zinc-600 hover:text-[#111111] hover:bg-[#F5F7F8]'
+                    className={`block px-4 py-3 rounded-lg text-sm font-semibold ${
+                      isActive(link.href) ? 'text-[#111111] bg-[#8DFF2F]' : 'text-zinc-600 hover:text-[#111111] hover:bg-[#F5F7F8]'
                     }`}
                   >
                     {link.label}
                   </Link>
                 ))}
-                <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn-primary w-full mt-3">
+                <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn-primary w-full mt-3 rounded-lg">
                   <MessageCircle className="w-4 h-4" /> WhatsApp Inquiry
                 </a>
               </div>
@@ -180,7 +180,7 @@ function IconButton({ children, onClick, label }) {
   return (
     <button
       onClick={onClick}
-      className="w-10 h-10 rounded-md flex items-center justify-center text-zinc-600 hover:text-[#111111] hover:bg-white transition-colors"
+      className="w-10 h-10 rounded-full flex items-center justify-center text-zinc-500 hover:text-[#111111] hover:bg-[#F5F7F8] transition-colors"
       aria-label={label}
     >
       {children}

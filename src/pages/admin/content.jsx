@@ -10,7 +10,9 @@ const empty = {
   metric: { value: '', label: '' },
   feature: { title: '', text: '' },
   brand: { name: '', models: [] },
-  showcase: { title: '', text: '' },
+  showcase: { title: '', text: '', details: [] },
+  phaseDetail: { title: '', text: '' },
+  checkoutStep: { title: '', text: '' },
   testimonial: { quote: '', name: '' },
   card: { title: '', text: '' },
   post: { title: '', category: '', excerpt: '' },
@@ -133,6 +135,12 @@ export default function AdminContent() {
           {(item, index) => <TitleText item={item} onTitle={(v) => setPath(['homepage', 'features', index, 'title'], v)} onText={(v) => setPath(['homepage', 'features', index, 'text'], v)} />}
         </ArrayPanel>
 
+        <Panel title="Homepage Quality Section">
+          <Text value={content.homepage.featuresSection.label} label="Eyebrow" onChange={(v) => setPath(['homepage', 'featuresSection', 'label'], v)} />
+          <Text value={content.homepage.featuresSection.title} label="Title" onChange={(v) => setPath(['homepage', 'featuresSection', 'title'], v)} />
+          <Area value={content.homepage.featuresSection.description} label="Description" onChange={(v) => setPath(['homepage', 'featuresSection', 'description'], v)} />
+        </Panel>
+
         <Panel title="Homepage Brand Story">
           <Text value={content.homepage.story.label} label="Eyebrow" onChange={(v) => setPath(['homepage', 'story', 'label'], v)} />
           <Text value={content.homepage.story.title} label="Title" onChange={(v) => setPath(['homepage', 'story', 'title'], v)} />
@@ -175,7 +183,32 @@ export default function AdminContent() {
         </Panel>
 
         <ArrayPanel title="Installation Showcase" path={['homepage', 'installShowcase']} items={content.homepage.installShowcase} add={() => addItem(['homepage', 'installShowcase'], empty.showcase)} remove={removeItem}>
-          {(item, index) => <TitleText item={item} onTitle={(v) => setPath(['homepage', 'installShowcase', index, 'title'], v)} onText={(v) => setPath(['homepage', 'installShowcase', index, 'text'], v)} />}
+          {(item, index) => (
+            <div className="space-y-4">
+              <TitleText item={item} onTitle={(v) => setPath(['homepage', 'installShowcase', index, 'title'], v)} onText={(v) => setPath(['homepage', 'installShowcase', index, 'text'], v)} />
+              <div className="space-y-3 border-t border-gray-200 pt-4">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="text-sm font-bold text-gray-800">Phase Details</h3>
+                  <button type="button" onClick={() => addItem(['homepage', 'installShowcase', index, 'details'], empty.phaseDetail)} className="btn-secondary py-2 px-3 text-xs">
+                    <Plus className="w-3.5 h-3.5" /> Add Detail
+                  </button>
+                </div>
+                {(item.details || []).map((detail, detailIndex) => (
+                  <div key={detailIndex} className="rounded-lg border border-gray-200 bg-white p-3">
+                    <div className="flex justify-end mb-3">
+                      <button type="button" onClick={() => removeItem(['homepage', 'installShowcase', index, 'details'], detailIndex)} className="text-red-600 hover:text-red-700 text-xs font-semibold flex items-center gap-1">
+                        <Trash2 className="w-3.5 h-3.5" /> Remove Detail
+                      </button>
+                    </div>
+                    <Grid>
+                      <Text value={detail.title} label="Detail Title" onChange={(v) => setPath(['homepage', 'installShowcase', index, 'details', detailIndex, 'title'], v)} />
+                      <Area value={detail.text} label="Detail Text" onChange={(v) => setPath(['homepage', 'installShowcase', index, 'details', detailIndex, 'text'], v)} />
+                    </Grid>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </ArrayPanel>
 
         <Panel title="Testimonials Section Title">
@@ -200,6 +233,10 @@ export default function AdminContent() {
           <Area value={content.homepage.cta.description} label="Description" onChange={(v) => setPath(['homepage', 'cta', 'description'], v)} />
           <Text value={content.homepage.cta.button} label="Button Text" onChange={(v) => setPath(['homepage', 'cta', 'button'], v)} />
         </Panel>
+
+        <ArrayPanel title="Homepage Checkout Steps" path={['homepage', 'checkoutSteps']} items={content.homepage.checkoutSteps} add={() => addItem(['homepage', 'checkoutSteps'], empty.checkoutStep)} remove={removeItem}>
+          {(item, index) => <TitleText item={item} onTitle={(v) => setPath(['homepage', 'checkoutSteps', index, 'title'], v)} onText={(v) => setPath(['homepage', 'checkoutSteps', index, 'text'], v)} />}
+        </ArrayPanel>
 
         <Panel title="About Page">
           <Text value={content.about.label} label="Eyebrow" onChange={(v) => setPath(['about', 'label'], v)} />

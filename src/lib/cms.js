@@ -16,7 +16,13 @@ export function serializeCmsContent(content) {
 }
 
 function mergeCms(base, incoming) {
-  if (Array.isArray(base)) return Array.isArray(incoming) ? incoming : base;
+  if (Array.isArray(base)) {
+    if (!Array.isArray(incoming)) return base;
+    if (!base.length || !base.every((item) => item && typeof item === 'object' && !Array.isArray(item))) {
+      return incoming;
+    }
+    return incoming.map((item, index) => mergeCms(base[index] || base[0], item));
+  }
   if (!base || typeof base !== 'object') return incoming ?? base;
   const next = { ...base };
   if (!incoming || typeof incoming !== 'object') return next;
