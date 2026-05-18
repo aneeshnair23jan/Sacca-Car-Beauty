@@ -113,7 +113,7 @@ export const defaultCmsContent = {
       eyebrow: 'Order via WhatsApp',
       title: 'Ready to upgrade your drive?',
       description: 'Send us your vehicle details and cart. We will confirm compatibility, availability, and delivery.',
-      button: 'Start WhatsApp Order',
+      button: 'Connect with us',
     },
     checkoutSteps: [
       { title: 'Cart', text: 'Customer details, product names, quantities, and total amount stay in the message.' },

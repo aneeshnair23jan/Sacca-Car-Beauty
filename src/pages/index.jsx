@@ -777,10 +777,38 @@ function Testimonials({ testimonials, section }) {
 }
 
 function ContactCTA({ whatsappHref, cta }) {
+  const [form, setForm] = useState({ name: '', phone: '', vehicle: '', requirement: '' });
+  const [phoneError, setPhoneError] = useState('');
   const eyebrow = cta.eyebrow?.trim() || 'Order via WhatsApp';
   const title = cta.title?.trim() || 'Ready to upgrade your drive?';
   const description = cta.description?.trim() || 'Send us your vehicle details and cart. We will confirm compatibility, availability, and delivery.';
-  const button = cta.button?.trim() || 'Start WhatsApp Order';
+  const button = 'Connect with us';
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const phoneDigits = form.phone.replace(/\D/g, '');
+
+    if (!/^[6-9]\d{9}$/.test(phoneDigits)) {
+      setPhoneError('Enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.');
+      return;
+    }
+
+    const lines = [
+      `*New Inquiry - Sacca Car Beauty*`,
+      '',
+      '*Customer Details:*',
+      `Name: ${form.name || 'Not provided'}`,
+      `Phone: ${phoneDigits}`,
+      `Vehicle: ${form.vehicle || 'Not provided'}`,
+      '',
+      '*Requirement:*',
+      form.requirement || 'Not provided',
+    ];
+
+    window.open(`${whatsappHref}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener,noreferrer');
+    setForm({ name: '', phone: '', vehicle: '', requirement: '' });
+    setPhoneError('');
+  };
 
   return (
     <section className="relative overflow-hidden bg-[#111111] text-white py-24">
@@ -805,17 +833,47 @@ function ContactCTA({ whatsappHref, cta }) {
         </div>
         <form
           className="reveal-copy border border-white/12 bg-white/[0.06] p-5 sm:p-8 space-y-4 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl"
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={handleSubmit}
         >
           <div className="grid sm:grid-cols-2 gap-4">
-            <input className="input-field" placeholder="Name" />
-            <input className="input-field" placeholder="Phone" />
+            <input
+              className="input-field"
+              placeholder="Name"
+              value={form.name}
+              onChange={(e) => setForm((current) => ({ ...current, name: e.target.value }))}
+            />
+            <div>
+              <input
+                className={`input-field ${phoneError ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : ''}`}
+                placeholder="Phone"
+                inputMode="numeric"
+                maxLength={10}
+                value={form.phone}
+                onChange={(e) => {
+                  setPhoneError('');
+                  setForm((current) => ({ ...current, phone: e.target.value.replace(/\D/g, '').slice(0, 10) }));
+                }}
+                aria-invalid={phoneError ? 'true' : 'false'}
+              />
+              {phoneError && <p className="mt-1.5 text-xs font-semibold text-red-300">{phoneError}</p>}
+            </div>
           </div>
-          <input className="input-field" placeholder="Vehicle model" />
-          <textarea className="input-field resize-none min-h-32" rows={4} placeholder="Requirement" />
-          <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn-primary w-full">
+          <input
+            className="input-field"
+            placeholder="Vehicle model"
+            value={form.vehicle}
+            onChange={(e) => setForm((current) => ({ ...current, vehicle: e.target.value }))}
+          />
+          <textarea
+            className="input-field resize-none min-h-32"
+            rows={4}
+            placeholder="Requirement"
+            value={form.requirement}
+            onChange={(e) => setForm((current) => ({ ...current, requirement: e.target.value }))}
+          />
+          <button type="submit" className="btn-primary w-full">
             <MessageCircle className="w-4 h-4" /> {button}
-          </a>
+          </button>
           <p className="text-center text-xs text-white/45">Your details open as a ready-to-send WhatsApp message.</p>
         </form>
       </div>
