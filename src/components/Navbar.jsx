@@ -50,24 +50,24 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="bg-[#111111] text-white text-[11px] sm:text-xs text-center py-2 px-4 font-semibold">
+      <div className="bg-[#111111] text-white text-[9px] sm:text-xs text-center py-1.5 sm:py-2 px-3 sm:px-4 font-semibold leading-snug">
         {cms.global.announcement}
       </div>
 
-      <nav className="sticky top-0 z-50 bg-transparent py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`h-[76px] flex items-center justify-between gap-4 rounded-2xl border border-[#E5E7EB] bg-white px-4 sm:px-6 transition-all duration-300 ${
+      <nav className="sticky top-0 z-50 bg-transparent py-2 sm:py-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className={`h-14 sm:h-[76px] flex items-center justify-between gap-2 sm:gap-4 rounded-xl sm:rounded-2xl border border-[#E5E7EB] bg-white px-2.5 sm:px-6 transition-all duration-300 ${
             scrolled ? 'shadow-[0_18px_60px_rgba(17,17,17,0.18)]' : 'shadow-[0_18px_60px_rgba(17,17,17,0.12)]'
           }`}>
-            <Link href="/" className="flex items-center gap-3 min-w-0">
-              <span className="w-10 h-10 rounded-lg bg-[#111111] text-[#8DFF2F] flex items-center justify-center">
-                <Car className="w-5 h-5" />
+            <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#111111] text-[#8DFF2F] flex items-center justify-center flex-shrink-0">
+                <Car className="w-4 h-4 sm:w-5 sm:h-5" />
               </span>
               <span className="min-w-0">
-                <span className="block text-xl font-extrabold text-[#111111] leading-none truncate">
+                <span className="block max-w-[150px] sm:max-w-none text-xs sm:text-xl font-extrabold text-[#111111] leading-none truncate">
                   {settings.shop_name || 'Sacca Car Beauty'}
                 </span>
-                <span className="block text-[10px] text-zinc-500 uppercase font-bold tracking-[0.18em] truncate">
+                <span className="block max-w-[150px] sm:max-w-none text-[7px] sm:text-[10px] text-zinc-500 uppercase font-bold tracking-[0.09em] sm:tracking-[0.18em] truncate">
                   {settings.shop_tagline || 'Premium Accessories'}
                 </span>
               </span>
@@ -89,15 +89,15 @@ export default function Navbar() {
               ))}
             </div>
 
-            <div className="flex items-center gap-1 lg:border-l lg:border-[#E5E7EB] lg:pl-6">
+            <div className="flex items-center gap-0.5 sm:gap-1 lg:border-l lg:border-[#E5E7EB] lg:pl-6">
               <IconButton onClick={() => setSearchOpen((v) => !v)} label="Search">
                 <Search className="w-5 h-5" />
               </IconButton>
-              <Link href="/wishlist" className="relative w-10 h-10 rounded-full flex items-center justify-center text-zinc-500 hover:text-[#111111] hover:bg-[#F5F7F8] transition-colors" aria-label="Wishlist">
+              <Link href="/wishlist" className="relative hidden sm:flex w-10 h-10 rounded-full items-center justify-center text-zinc-500 hover:text-[#111111] hover:bg-[#F5F7F8] transition-colors" aria-label="Wishlist">
                 <Heart className="w-5 h-5" />
                 {wishlist.length > 0 && <Badge value={wishlist.length} />}
               </Link>
-              <Link href="/cart" className="relative w-10 h-10 rounded-full flex items-center justify-center text-zinc-500 hover:text-[#111111] hover:bg-[#F5F7F8] transition-colors" aria-label="Cart">
+              <Link href="/cart" className="relative hidden sm:flex w-10 h-10 rounded-full items-center justify-center text-zinc-500 hover:text-[#111111] hover:bg-[#F5F7F8] transition-colors" aria-label="Cart">
                 <ShoppingCart className="w-5 h-5" />
                 {cartCount > 0 && <Badge value={cartCount} />}
               </Link>
@@ -109,7 +109,7 @@ export default function Navbar() {
               </a>
               <button
                 onClick={() => setMenuOpen((v) => !v)}
-                className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center text-zinc-500 hover:text-[#111111] hover:bg-[#F5F7F8] transition-colors"
+                className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-zinc-500 hover:text-[#111111] hover:bg-[#F5F7F8] transition-colors"
                 aria-label="Menu"
               >
                 {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -180,7 +180,7 @@ function IconButton({ children, onClick, label }) {
   return (
     <button
       onClick={onClick}
-      className="w-10 h-10 rounded-full flex items-center justify-center text-zinc-500 hover:text-[#111111] hover:bg-[#F5F7F8] transition-colors"
+      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-zinc-500 hover:text-[#111111] hover:bg-[#F5F7F8] transition-colors"
       aria-label={label}
     >
       {children}

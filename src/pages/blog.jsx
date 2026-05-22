@@ -17,14 +17,14 @@ export default function BlogPage({ cmsContent }) {
       <Navbar />
       <main className="flex-1">
         <section className="bg-black border-b border-white/10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
             <p className="section-label">{cms.label}</p>
-            <h1 className="font-display text-5xl md:text-6xl font-bold text-white max-w-3xl">{cms.title}</h1>
-            <p className="text-zinc-400 leading-8 mt-6 max-w-2xl">{cms.description}</p>
+            <h1 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold text-white max-w-3xl">{cms.title}</h1>
+            <p className="text-zinc-400 leading-7 sm:leading-8 mt-4 sm:mt-6 max-w-2xl">{cms.description}</p>
           </div>
         </section>
 
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
           <div className="grid md:grid-cols-3 gap-4">
             {cms.posts.map((post, index) => {
               const Icon = postIcons[index % postIcons.length];
@@ -33,7 +33,7 @@ export default function BlogPage({ cmsContent }) {
                   <div className="hero-visual h-48 flex items-center justify-center">
                     <Icon className="w-16 h-16 text-white/80" />
                   </div>
-                  <div className="p-6">
+                  <div className="p-4 sm:p-6">
                     <p className="text-xs text-red-500 font-bold uppercase mb-3">{post.category}</p>
                     <h2 className="text-xl font-display font-bold text-white leading-tight">{post.title}</h2>
                     <p className="text-sm text-zinc-500 leading-7 mt-4">{post.excerpt}</p>

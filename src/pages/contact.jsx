@@ -18,17 +18,17 @@ export default function ContactPage({ cmsContent }) {
       <main className="flex-1">
         <section className="relative overflow-hidden surface-grid">
           <div className="absolute inset-0 bg-gradient-to-b from-white/80 to-[#F5F7F8]" />
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 grid lg:grid-cols-[0.9fr_1.1fr] gap-10">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20 grid lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-10">
             <div>
               <p className="section-label">{cms.label}</p>
-              <h1 className="text-5xl md:text-6xl font-extrabold text-[#111111] leading-tight">{cms.title}</h1>
-              <p className="text-zinc-600 leading-8 mt-6">{cms.description}</p>
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-[#111111] leading-tight">{cms.title}</h1>
+              <p className="text-zinc-600 leading-7 sm:leading-8 mt-4 sm:mt-6">{cms.description}</p>
               <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn-primary mt-8 px-8 py-4">
                 <MessageCircle className="w-4 h-4" /> Start WhatsApp Chat
               </a>
             </div>
 
-            <div className="card p-6">
+            <div className="card p-4 sm:p-6">
               <div className="grid sm:grid-cols-2 gap-4 mb-6">
                 <Info icon={MessageCircle} label="WhatsApp" value={settings.whatsapp_number || 'Available on request'} />
                 <Info icon={Phone} label="Support" value={cms.support} />

@@ -1,13 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { SlidersHorizontal, X, ChevronDown, Search, Sparkles } from 'lucide-react';
+import { Check, SlidersHorizontal, X, ChevronDown, Search, Sparkles } from 'lucide-react';
 import { getSettingsFromDb } from '@/lib/getSettings';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 
 const LIMIT = 12;
+const sortOptions = [
+  { value: 'newest', label: 'Newest First' },
+  { value: 'price_asc', label: 'Price: Low to High' },
+  { value: 'price_desc', label: 'Price: High to Low' },
+  { value: 'name', label: 'Name A-Z' },
+];
 
 export default function ShopPage() {
   const router = useRouter();
@@ -18,6 +24,7 @@ export default function ShopPage() {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [sortOpen, setSortOpen] = useState(false);
   const [searchInput, setSearchInput] = useState('');
 
   useEffect(() => {
@@ -55,6 +62,16 @@ export default function ShopPage() {
     router.push({ pathname: '/shop', query: next });
   };
 
+  const updateCategory = (value) => {
+    updateFilter('category', value);
+    setFiltersOpen(false);
+  };
+
+  const updateSort = (value) => {
+    updateFilter('sort', value);
+    setSortOpen(false);
+  };
+
   const submitSearch = (e) => {
     e.preventDefault();
     updateFilter('search', searchInput.trim());
@@ -65,6 +82,7 @@ export default function ShopPage() {
   const currentPage = parseInt(qPage);
   const hasFilters = qCategory || qSearch;
   const activeCategory = categories.find((c) => c.id == qCategory);
+  const activeSort = sortOptions.find((option) => option.value === qSort) || sortOptions[0];
   const heading = qSearch
     ? `Results for "${qSearch}"`
     : activeCategory
@@ -75,7 +93,7 @@ export default function ShopPage() {
     <div className="min-h-screen flex flex-col bg-[#F5F7F8]">
       <Navbar />
 
-      <div className="relative overflow-hidden bg-[#111111] px-4 pb-12 pt-9 sm:pb-14 sm:pt-11">
+      <div className="relative overflow-hidden bg-[#111111] px-4 pb-10 pt-7 sm:pb-14 sm:pt-11">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/images/shop-collection-banner.png"
@@ -87,10 +105,10 @@ export default function ShopPage() {
         <div className="relative max-w-7xl mx-auto">
           <div className="max-w-3xl">
             <p className="text-[#8DFF2F] text-xs font-extrabold uppercase tracking-[0.22em] mb-3">Our Collection</p>
-            <h1 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white leading-tight">
               {heading}
             </h1>
-            <p className="text-sm sm:text-base text-zinc-300 leading-6 mt-4 max-w-xl">
+            <p className="text-sm sm:text-base text-zinc-300 leading-6 mt-3 sm:mt-4 max-w-xl">
               Browse premium car accessories selected for fit, finish, protection, and daily usability.
             </p>
           </div>
@@ -103,8 +121,8 @@ export default function ShopPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-7 pb-16 flex-1 w-full">
-        <div className="mb-8 rounded-lg border border-[#E5E7EB] bg-white p-4 shadow-[0_18px_56px_rgba(17,17,17,0.08)]">
-          <div className="grid gap-3 lg:grid-cols-[1fr_auto_auto] lg:items-center">
+        <div className="mb-6 sm:mb-8 rounded-lg border border-[#E5E7EB] bg-white p-3 sm:p-4 shadow-[0_18px_56px_rgba(17,17,17,0.08)]">
+          <div className="grid gap-3 lg:grid-cols-[1fr_auto_13rem] lg:items-center">
             <form onSubmit={submitSearch} className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
               <input
@@ -114,43 +132,71 @@ export default function ShopPage() {
                 className="input-field pl-12"
               />
             </form>
-            <div className="flex items-center gap-3">
-            {hasFilters && (
-              <button onClick={clearFilters} className="flex items-center gap-1.5 text-xs font-semibold text-[#111111] hover:border-[#8DFF2F] uppercase tracking-wide border border-[#E5E7EB] rounded-lg px-4 py-3">
-                <X className="w-3 h-3" /> Clear Filters
+            <div className="grid grid-cols-2 gap-2 lg:flex lg:items-center">
+              <button
+                type="button"
+                onClick={() => setFiltersOpen(!filtersOpen)}
+                className={`lg:hidden flex items-center justify-center gap-2 rounded-lg border px-4 py-3 text-sm font-semibold transition-colors ${
+                  filtersOpen ? 'border-[#8DFF2F] bg-[#8DFF2F]/15 text-[#111111]' : 'border-[#E5E7EB] text-gray-700'
+                }`}
+              >
+                <SlidersHorizontal className="w-4 h-4" /> {filtersOpen ? 'Hide' : 'Filters'}
               </button>
-            )}
-            <button onClick={() => setFiltersOpen(!filtersOpen)} className="lg:hidden flex items-center gap-2 text-sm font-semibold text-gray-700 border border-[#E5E7EB] rounded-lg px-4 py-3">
-              <SlidersHorizontal className="w-4 h-4" /> Filters
-            </button>
-          </div>
+              {hasFilters && (
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="flex items-center justify-center gap-1.5 rounded-lg border border-[#E5E7EB] px-4 py-3 text-xs font-semibold uppercase tracking-wide text-[#111111] hover:border-[#8DFF2F] lg:whitespace-nowrap"
+                >
+                  <X className="w-3 h-3" /> Clear
+                </button>
+              )}
+            </div>
             <div className="relative">
-            <select
-              value={qSort}
-              onChange={(e) => updateFilter('sort', e.target.value)}
-                className="input-field pr-10 text-sm appearance-none cursor-pointer w-full lg:w-52"
-            >
-              <option value="newest">Newest First</option>
-              <option value="price_asc">Price: Low to High</option>
-              <option value="price_desc">Price: High to Low</option>
-              <option value="name">Name A-Z</option>
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              <button
+                type="button"
+                onClick={() => setSortOpen((open) => !open)}
+                className="input-field flex items-center justify-between gap-3 pr-3 text-left text-sm"
+                aria-expanded={sortOpen}
+              >
+                <span className="truncate">{activeSort.label}</span>
+                <ChevronDown className={`h-4 w-4 flex-shrink-0 text-gray-400 transition-transform ${sortOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {sortOpen && (
+                <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-30 overflow-hidden rounded-lg border border-[#E5E7EB] bg-white shadow-[0_18px_48px_rgba(17,17,17,0.16)]">
+                  {sortOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => updateSort(option.value)}
+                      className={`flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm transition-colors ${
+                        qSort === option.value ? 'bg-[#8DFF2F] font-bold text-[#111111]' : 'text-gray-700 hover:bg-[#F5F7F8]'
+                      }`}
+                    >
+                      <span>{option.label}</span>
+                      {qSort === option.value && <Check className="h-4 w-4" />}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
           <aside className={`${filtersOpen ? 'block' : 'hidden'} lg:block`}>
-            <div className="sticky top-28 rounded-lg border border-[#E5E7EB] bg-white p-5 shadow-[0_14px_44px_rgba(17,17,17,0.06)]">
+            <div className="sticky top-28 rounded-lg border border-[#E5E7EB] bg-white p-4 shadow-[0_14px_44px_rgba(17,17,17,0.06)] sm:p-5">
               <div className="mb-5 flex items-center justify-between">
                 <h3 className="text-xs font-extrabold tracking-[0.18em] uppercase text-gray-500">Categories</h3>
-                <Sparkles className="w-4 h-4 text-[#00A83D]" />
+                <button type="button" onClick={() => setFiltersOpen(false)} className="lg:hidden rounded-md p-1 text-gray-400 hover:bg-[#F5F7F8] hover:text-[#111111]" aria-label="Close filters">
+                  <X className="h-4 w-4" />
+                </button>
+                <Sparkles className="hidden w-4 h-4 text-[#00A83D] lg:block" />
               </div>
-              <ul className="space-y-2">
+              <ul className="max-h-[330px] space-y-2 overflow-y-auto pr-1 lg:max-h-none lg:overflow-visible lg:pr-0">
                 <li>
                   <button
-                    onClick={() => updateFilter('category', '')}
+                    onClick={() => updateCategory('')}
                     className={`w-full rounded-lg px-4 py-3 text-sm transition-colors flex items-center justify-between ${!qCategory ? 'text-[#111111] bg-[#8DFF2F] font-extrabold' : 'text-gray-600 hover:text-[#111111] hover:bg-[#F5F7F8]'}`}
                   >
                     <span>All Products</span>
@@ -160,7 +206,7 @@ export default function ShopPage() {
                 {categories.map((cat) => (
                   <li key={cat.id}>
                   <button
-                      onClick={() => updateFilter('category', cat.id)}
+                      onClick={() => updateCategory(cat.id)}
                       className={`w-full rounded-lg px-4 py-3 text-sm transition-colors flex items-center justify-between ${qCategory == cat.id ? 'text-[#111111] bg-[#8DFF2F] font-extrabold' : 'text-gray-600 hover:text-[#111111] hover:bg-[#F5F7F8]'}`}
                     >
                       <span>{cat.name}</span>
@@ -180,7 +226,7 @@ export default function ShopPage() {
               {hasFilters && <span className="rounded-full bg-[#8DFF2F]/20 px-3 py-1 text-xs font-bold text-[#236f1e]">Filtered</span>}
             </div>
             {loading ? (
-              <div className="grid grid-cols-2 xl:grid-cols-3 gap-5">
+              <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-5">
                 {[...Array(6)].map((_, i) => (
                   <div key={i} className="card overflow-hidden">
                     <div className="aspect-square skeleton" />
@@ -194,7 +240,7 @@ export default function ShopPage() {
               </div>
             ) : products.length > 0 ? (
               <>
-                <div className="grid grid-cols-2 xl:grid-cols-3 gap-5">
+                <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-5">
                   {products.map((p) => <ProductCard key={p.id} product={p} />)}
                 </div>
                 {totalPages > 1 && (
@@ -212,7 +258,7 @@ export default function ShopPage() {
                 )}
               </>
             ) : (
-              <div className="rounded-lg border border-[#E5E7EB] bg-white text-center py-24 shadow-card">
+              <div className="rounded-lg border border-[#E5E7EB] bg-white text-center py-16 sm:py-24 shadow-card">
                 <Search className="w-12 h-12 text-gray-200 mx-auto mb-4" />
                 <p className="text-lg font-semibold text-gray-900 mb-2">No products found</p>
                 <p className="text-sm text-gray-500 mb-6">Try adjusting your filters or search terms</p>

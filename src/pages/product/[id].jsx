@@ -123,8 +123,8 @@ export default function ProductPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 flex-1 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
 
           {/* Images */}
           <div>
@@ -166,11 +166,11 @@ export default function ProductPage() {
             {product.category_name && (
               <p className="section-label mb-2">{product.category_name}</p>
             )}
-            <h1 className="text-3xl font-extrabold text-[#111111] mb-4 leading-tight">{product.name}</h1>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#111111] mb-4 leading-tight">{product.name}</h1>
 
             {/* Price */}
             <div className="flex items-baseline gap-3 mb-5">
-              <span className="text-3xl font-extrabold text-[#111111]">{formatPrice(discountedPrice)}</span>
+              <span className="text-2xl sm:text-3xl font-extrabold text-[#111111]">{formatPrice(discountedPrice)}</span>
               {product.discount_percent > 0 && (
                 <span className="text-lg text-gray-400 line-through">{formatPrice(product.price)}</span>
               )}

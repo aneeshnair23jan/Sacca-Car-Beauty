@@ -28,13 +28,24 @@ export default function ProductCard({ product }) {
 
   const handleWishlist = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     toggleWishlist(product);
   };
 
+  const handleWhatsApp = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.open(whatsappHref, '_blank', 'noopener,noreferrer');
+  };
+
   return (
-    <motion.div whileHover={{ y: -6 }} transition={{ type: 'spring', stiffness: 260, damping: 22 }}>
-      <Link href={`/product/${product.id}`} className="group card overflow-hidden flex flex-col hover:border-[#8DFF2F] transition-all duration-300">
-        <div className="relative aspect-square bg-[#F5F7F8] overflow-hidden">
+    <motion.article
+      whileHover={{ y: -6 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+      className="group card overflow-hidden flex flex-col hover:border-[#8DFF2F] transition-all duration-300"
+    >
+      <div className="relative aspect-square bg-[#F5F7F8] overflow-hidden">
+        <Link href={`/product/${product.id}`} className="block h-full w-full" aria-label={product.name}>
           {product.primary_image_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -50,76 +61,76 @@ export default function ProductCard({ product }) {
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
           )}
+        </Link>
 
-          <div className="absolute inset-x-0 top-0 p-3 flex items-start justify-between gap-2">
-            <div className="flex flex-col gap-1">
-              {product.discount_percent > 0 && <Badge>-{product.discount_percent}%</Badge>}
-              {Boolean(product.new_launch) && <Badge>New</Badge>}
-              {Boolean(product.best_seller) && <Badge>Best Seller</Badge>}
-              {product.stock === 0 && <Badge tone="dark">Sold Out</Badge>}
-            </div>
-            <button
-              onClick={handleWishlist}
-              className={`w-9 h-9 rounded-md flex items-center justify-center backdrop-blur transition-colors ${
-                wishlisted ? 'bg-[#111111] text-white' : 'bg-white/85 text-zinc-600 hover:text-[#111111]'
-              }`}
-              aria-label="Toggle wishlist"
-            >
-              <Heart className={`w-4 h-4 ${wishlisted ? 'fill-white' : ''}`} />
-            </button>
+        <div className="absolute inset-x-0 top-0 p-2 sm:p-3 flex items-start justify-between gap-2">
+          <div className="flex flex-col gap-1">
+            {product.discount_percent > 0 && <Badge>-{product.discount_percent}%</Badge>}
+            {Boolean(product.new_launch) && <Badge>New</Badge>}
+            {Boolean(product.best_seller) && <Badge>Best Seller</Badge>}
+            {product.stock === 0 && <Badge tone="dark">Sold Out</Badge>}
           </div>
-
-          <div className="absolute inset-x-3 bottom-3 translate-y-16 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 grid grid-cols-[1fr_auto] gap-2">
-            <button
-              onClick={handleAddToCart}
-              disabled={product.stock === 0}
-              className="bg-[#111111] disabled:bg-zinc-400 text-white text-xs font-bold py-3 rounded-md flex items-center justify-center gap-2"
-            >
-              <ShoppingCart className="w-3.5 h-3.5" /> Add to Cart
-            </button>
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="w-11 bg-[#8DFF2F] text-[#111111] rounded-md flex items-center justify-center"
-              aria-label="Ask on WhatsApp"
-            >
-              <MessageCircle className="w-4 h-4" />
-            </a>
-          </div>
+          <button
+            type="button"
+            onClick={handleWishlist}
+            className={`w-8 h-8 sm:w-9 sm:h-9 rounded-md flex items-center justify-center backdrop-blur transition-colors ${
+              wishlisted ? 'bg-[#111111] text-white' : 'bg-white/85 text-zinc-600 hover:text-[#111111]'
+            }`}
+            aria-label="Toggle wishlist"
+          >
+            <Heart className={`w-4 h-4 ${wishlisted ? 'fill-white' : ''}`} />
+          </button>
         </div>
 
-        <div className="p-4 flex flex-col flex-1">
-          {product.category_name && (
-            <span className="text-[11px] text-[#00A83D] font-bold uppercase tracking-[0.14em] mb-2">
-              {product.category_name}
-            </span>
-          )}
-          <h3 className="text-sm font-semibold text-[#111111] line-clamp-2 mb-3 flex-1 leading-snug">
-            {product.name}
-          </h3>
+        <div className="absolute inset-x-2 sm:inset-x-3 bottom-2 sm:bottom-3 translate-y-16 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 grid grid-cols-[1fr_auto] gap-2">
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            disabled={product.stock === 0}
+            className="bg-[#111111] disabled:bg-zinc-400 text-white text-[11px] sm:text-xs font-bold py-2.5 sm:py-3 rounded-md flex items-center justify-center gap-1.5 sm:gap-2"
+          >
+            <ShoppingCart className="w-3.5 h-3.5" /> Add to Cart
+          </button>
+          <button
+            type="button"
+            onClick={handleWhatsApp}
+            className="w-10 sm:w-11 bg-[#8DFF2F] text-[#111111] rounded-md flex items-center justify-center"
+            aria-label="Ask on WhatsApp"
+          >
+            <MessageCircle className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
 
-          <div className="flex items-end justify-between gap-3">
-            <div className="flex flex-wrap items-baseline gap-2">
-              <span className="text-lg font-extrabold text-[#111111]">{formatPrice(discountedPrice)}</span>
-              {product.discount_percent > 0 && (
-                <span className="text-xs text-zinc-400 line-through">{formatPrice(product.price)}</span>
-              )}
-            </div>
-            {product.stock > 0 && product.stock <= 5 && (
-              <span className="text-[11px] text-amber-600 font-semibold">Only {product.stock} left</span>
+      <div className="p-3 sm:p-4 flex flex-col flex-1">
+        {product.category_name && (
+          <span className="text-[10px] sm:text-[11px] text-[#00A83D] font-bold uppercase tracking-[0.12em] sm:tracking-[0.14em] mb-2">
+            {product.category_name}
+          </span>
+        )}
+        <Link href={`/product/${product.id}`} className="text-xs sm:text-sm font-semibold text-[#111111] line-clamp-2 mb-2 sm:mb-3 flex-1 leading-snug hover:text-[#00A83D] transition-colors">
+          {product.name}
+        </Link>
+
+        <div className="flex items-end justify-between gap-3">
+          <div className="flex flex-wrap items-baseline gap-2">
+            <span className="text-base sm:text-lg font-extrabold text-[#111111]">{formatPrice(discountedPrice)}</span>
+            {product.discount_percent > 0 && (
+              <span className="text-xs text-zinc-400 line-through">{formatPrice(product.price)}</span>
             )}
           </div>
+          {product.stock > 0 && product.stock <= 5 && (
+            <span className="text-[10px] sm:text-[11px] text-amber-600 font-semibold">Only {product.stock} left</span>
+          )}
         </div>
-      </Link>
-    </motion.div>
+      </div>
+    </motion.article>
   );
 }
 
 function Badge({ children, tone = 'green' }) {
   return (
-    <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase ${
+    <span className={`text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md uppercase ${
       tone === 'green' ? 'bg-[#8DFF2F] text-[#111111]' : 'bg-[#111111] text-white'
     }`}>
       {children}

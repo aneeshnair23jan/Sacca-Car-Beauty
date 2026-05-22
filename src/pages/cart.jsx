@@ -30,15 +30,15 @@ export default function CartPage() {
       <Navbar />
 
       {/* Header */}
-      <div className="bg-white border-b border-[#E5E7EB] py-8 px-4">
+      <div className="bg-white border-b border-[#E5E7EB] py-6 sm:py-8 px-4">
         <div className="max-w-5xl mx-auto">
           <p className="section-label mb-1">Review</p>
-          <h1 className="text-3xl font-extrabold text-[#111111]">Shopping Cart</h1>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#111111]">Shopping Cart</h1>
           <p className="text-zinc-500 text-sm mt-1">{cart.length} item{cart.length !== 1 ? 's' : ''}</p>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 flex-1 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
           {/* Items */}
@@ -48,8 +48,8 @@ export default function CartPage() {
                 ? item.price * (1 - item.discount_percent / 100)
                 : item.price;
               return (
-                <div key={item.id} className="flex gap-4 border border-[#E5E7EB] bg-white rounded-2xl p-4 hover:border-[#8DFF2F] transition-colors">
-                  <div className="w-20 h-20 flex-shrink-0 bg-gray-50 overflow-hidden">
+                <div key={item.id} className="flex gap-3 sm:gap-4 border border-[#E5E7EB] bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 hover:border-[#8DFF2F] transition-colors">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-gray-50 overflow-hidden">
                     {item.primary_image_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={item.primary_image_url} alt={item.name} className="w-full h-full object-cover" />

@@ -24,17 +24,17 @@ export default function WishlistPage() {
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
 
-      <div className="bg-navy-900 py-8 px-4">
+      <div className="bg-navy-900 py-6 sm:py-8 px-4">
         <div className="max-w-5xl mx-auto">
           <p className="section-label text-gold-400 mb-1">Saved</p>
-          <h1 className="font-display text-3xl font-bold text-white">My Wishlist</h1>
+          <h1 className="font-display text-2xl sm:text-3xl font-bold text-white">My Wishlist</h1>
           <p className="text-gray-400 text-sm mt-1">{wishlist.length} saved item{wishlist.length !== 1 ? 's' : ''}</p>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 flex-1 w-full">
         {wishlist.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
+          <div className="flex flex-col items-center justify-center py-16 sm:py-24 text-center">
             <Heart className="w-16 h-16 text-gray-200 mb-6" />
             <h2 className="font-display text-2xl font-bold text-navy-900 mb-2">Nothing saved yet</h2>
             <p className="text-gray-500 text-sm mb-8">Tap the heart on any product to save it here</p>
@@ -68,7 +68,7 @@ export default function WishlistPage() {
                       <span className="absolute top-3 left-3 bg-gold-600 text-white text-xs font-bold px-2 py-0.5">-{product.discount_percent}%</span>
                     )}
                   </Link>
-                  <div className="p-4 flex flex-col flex-1">
+                  <div className="p-3 sm:p-4 flex flex-col flex-1">
                     {product.category_name && (
                       <span className="text-xs text-gold-600 font-semibold tracking-widest uppercase mb-1">{product.category_name}</span>
                     )}

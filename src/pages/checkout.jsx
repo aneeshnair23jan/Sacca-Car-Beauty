@@ -127,17 +127,17 @@ export default function CheckoutPage() {
       <SEO title="WhatsApp Checkout" description="Complete your order with WhatsApp checkout, vehicle details, delivery address, and cart total." />
       <Navbar />
 
-      <div className="bg-white border-b border-[#E5E7EB] py-10 px-4">
+      <div className="bg-white border-b border-[#E5E7EB] py-6 sm:py-10 px-4">
         <div className="max-w-5xl mx-auto">
           <p className="section-label mb-1">Almost There</p>
-          <h1 className="text-3xl font-extrabold text-[#111111]">WhatsApp Checkout</h1>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#111111]">WhatsApp Checkout</h1>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 flex-1 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="space-y-6">
-            <div className="card p-6">
+            <div className="card p-4 sm:p-6">
               <h2 className="font-semibold text-[#111111] text-base mb-5 flex items-center gap-2">
                 <User className="w-4 h-4 text-[#00A83D]" /> Your Details
               </h2>
@@ -206,7 +206,7 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            <div className="bg-[#8DFF2F]/15 border border-[#8DFF2F]/35 rounded-2xl p-5">
+            <div className="bg-[#8DFF2F]/15 border border-[#8DFF2F]/35 rounded-xl sm:rounded-2xl p-4 sm:p-5">
               <h3 className="font-semibold text-[#111111] text-sm mb-3 flex items-center gap-2">
                 <MessageCircle className="w-4 h-4" /> How WhatsApp Ordering Works
               </h3>
@@ -227,7 +227,7 @@ export default function CheckoutPage() {
           </div>
 
           <div>
-            <div className="card p-6 sticky top-24">
+            <div className="card p-4 sm:p-6 sticky top-24">
               <h2 className="font-semibold text-[#111111] text-base mb-5 pb-4 border-b border-[#E5E7EB]">Order Summary</h2>
               <div className="space-y-3 mb-5 max-h-64 overflow-y-auto">
                 {cart.map((item) => {

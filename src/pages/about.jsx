@@ -18,13 +18,13 @@ export default function AboutPage({ cmsContent }) {
       <main className="flex-1">
         <section className="relative overflow-hidden surface-grid">
           <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-transparent to-[#F5F7F8]" />
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 grid lg:grid-cols-2 gap-12 items-center">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div>
               <p className="section-label">{cms.label}</p>
-              <h1 className="text-5xl md:text-6xl font-extrabold text-[#111111] leading-tight">{cms.title}</h1>
-              <p className="mt-6 text-zinc-600 leading-8">{cms.description}</p>
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-[#111111] leading-tight">{cms.title}</h1>
+              <p className="mt-4 sm:mt-6 text-zinc-600 leading-7 sm:leading-8">{cms.description}</p>
             </div>
-            <div className="relative rounded-2xl min-h-96 border border-white brand-glow overflow-hidden bg-[#111111]">
+            <div className="relative rounded-2xl min-h-[260px] sm:min-h-96 border border-white brand-glow overflow-hidden bg-[#111111]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/about-studio-accessories.png"
@@ -36,12 +36,12 @@ export default function AboutPage({ cmsContent }) {
           </div>
         </section>
 
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
           <div className="grid md:grid-cols-3 gap-4">
             {cms.cards.map((item, index) => {
               const Icon = cardIcons[index % cardIcons.length];
               return (
-                <div key={item.title} className="card p-6">
+                <div key={item.title} className="card p-4 sm:p-6">
                   <Icon className="w-7 h-7 text-[#00A83D] mb-5" />
                   <h2 className="text-[#111111] font-bold text-xl mb-3">{item.title}</h2>
                   <p className="text-sm text-zinc-500 leading-7">{item.text}</p>
@@ -51,7 +51,7 @@ export default function AboutPage({ cmsContent }) {
           </div>
         </section>
 
-        <section className="bg-white border-y border-[#E5E7EB] py-20">
+        <section className="bg-white border-y border-[#E5E7EB] py-14 md:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[0.9fr_1.1fr] gap-10 items-center">
             <div>
               <p className="section-label">{cms.label}</p>
